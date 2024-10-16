@@ -1,31 +1,61 @@
-// Preludium Damnatio.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+// main.cpp
+#include "story_manager.h"
+#include "input_manager.h"
+#include "render_manager.h"
+#include "audio_manager.h"
+#include <SDL.h>
 #include <iostream>
-#include "SDL.h"
 
-int main(int argc, char *argv[])
-{
-	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_Window* window = SDL_CreateWindow("Preludium Damnatio", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
-	SDL_Delay(3000);
-    std::cout << "Hello World!\n";
+int main() {
+    // Initialize SDL
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
+        return -1; // Exit if initialization fails
+    }
 
-	return 0;
+    // Create SDL window and renderer
+    SDL_Window* window = SDL_CreateWindow("Preludium Damnatio", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+    if (!window) {
+        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return -1; // Exit if window creation fails
+    }
+
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return -1; // Exit if renderer creation fails
+    }
+
+    // Initialize managers
+    StoryManager storyManager;
+    InputManager inputManager;
+    RenderManager renderManager(renderer); // Pass the renderer to RenderManager
+    AudioManager audioManager;
+
+    storyManager.LoadStory();
+
+    // Game loop
+    while (true) {
+        storyManager.DisplayCurrentNode();
+        int choice = inputManager.GetPlayerChoice(storyManager.GetCurrentOptions().size());
+        storyManager.HandleChoice(choice);
+
+        // Play audio and render art if necessary
+        if (storyManager.NeedsAsciiArt()) {
+            renderManager.RenderAsciiArt(storyManager.GetCurrentAsciiArt());
+        }
+        if (storyManager.NeedsAudio()) {
+            audioManager.PlayAudio(storyManager.GetCurrentAudio());
+        }
+    }
+
+    // Clean up and quit
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
 }
-
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

@@ -133,7 +133,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="audio_manager.cpp" />
+    <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="Preludium Damnatio.cpp" />
+    <ClCompile Include="render_manager.cpp" />
+    <ClCompile Include="story_manager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="audio_manager.h" />
+    <ClInclude Include="input_manager.h" />
+    <ClInclude Include="render_manager.h" />
+    <ClInclude Include="story_manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
