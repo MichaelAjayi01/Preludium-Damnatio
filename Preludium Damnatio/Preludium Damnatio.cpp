@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include <iostream>
 
+
 int main() {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {

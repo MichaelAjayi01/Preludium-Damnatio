@@ -15,11 +15,16 @@ public:
     std::string asciiArt; // Filename for ASCII art associated with this node
     std::string audioFile; // Filename for audio associated with this node
 
+    // Default constructor
+    StoryNode() = default;
+
+    // Constructor with parameters
     StoryNode(const std::string& text, const std::vector<std::string>& options,
         const std::map<int, std::string>& nextNodes,
         const std::string& asciiArt = "", const std::string& audioFile = "")
         : text(text), options(options), nextNodes(nextNodes), asciiArt(asciiArt), audioFile(audioFile) {}
 };
+
 
 class StoryManager {
 public:
