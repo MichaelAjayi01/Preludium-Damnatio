@@ -6,8 +6,9 @@
 #include <SDL.h>
 #include <iostream>
 
+#define SDL_MAIN_HANDLED
 
-int main() {
+int main(int argc, char* argv[]) {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
