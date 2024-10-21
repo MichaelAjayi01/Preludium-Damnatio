@@ -1,5 +1,3 @@
-// story_manager.h
-
 #ifndef STORY_MANAGER_H
 #define STORY_MANAGER_H
 
@@ -7,13 +5,14 @@
 #include <vector>
 #include <map>
 
+// StoryNode class representing a single node in the story
 class StoryNode {
 public:
-    std::string text; // The narrative text for this node
-    std::vector<std::string> options; // Player options leading to other nodes
-    std::map<int, std::string> nextNodes; // Maps option index to the next node's identifier
-    std::string asciiArt; // Filename for ASCII art associated with this node
-    std::string audioFile; // Filename for audio associated with this node
+    std::string text;
+    std::vector<std::string> options;
+    std::map<int, std::string> nextNodes;
+    std::string asciiArt;
+    std::string audioFile;
 
     // Default constructor
     StoryNode() = default;
@@ -25,38 +24,39 @@ public:
         : text(text), options(options), nextNodes(nextNodes), asciiArt(asciiArt), audioFile(audioFile) {}
 };
 
-
+// StoryManager class for managing the flow of the story
 class StoryManager {
 public:
     StoryManager();
 
-    // Load the story structure
     void LoadStory();
 
-    // Display the current node's text
     void DisplayCurrentNode();
 
-    // Handle player choice and update the current node
     void HandleChoice(int choice);
 
-    // Get current options
     const std::vector<std::string>& GetCurrentOptions() const;
 
-    // Get current ASCII art file
     const std::string& GetCurrentAsciiArt() const;
 
-    // Get current audio file
     const std::string& GetCurrentAudio() const;
 
-    // Check if the current node needs ASCII art
     bool NeedsAsciiArt() const;
 
-    // Check if the current node needs audio
     bool NeedsAudio() const;
 
+    void HandleRandomEncounter();
+
 private:
-    std::map<std::string, StoryNode> storyNodes; // Map of all story nodes
+    std::map<std::string, StoryNode> storyNodes; // All story nodes mapped by their identifier
     std::string currentNode; // Identifier for the current node
+
+    int plotPointCounter; // Counter for tracking progress towards key plot points
+
+    std::vector<std::string> randomNodes; // List of identifiers for random encounter nodes
+
+    // Helper method to determine if the next encounter should be random or a key plot point
+    bool IsKeyPlotPoint() const;
 };
 
 #endif // STORY_MANAGER_H
