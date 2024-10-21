@@ -45,6 +45,7 @@ void StoryManager::LoadStory() {
 // Display the current node's text and options
 void StoryManager::DisplayCurrentNode() {
     const StoryNode& node = storyNodes[currentNode];
+	std::cout << currentNode << std::endl; //debug current node.
     std::cout << node.text << std::endl;
 
     for (size_t i = 0; i < node.options.size(); ++i) {
@@ -57,19 +58,26 @@ void StoryManager::HandleChoice(int choice) {
         throw std::out_of_range("Choice out of range");
     }
 
+    // Check if we're currently at a random node
+    bool wasRandomEncounter = !IsKeyPlotPoint();
+
     // Determine if this is a key plot point or random encounter
     if (IsKeyPlotPoint()) {
         // Handle key plot points (e.g., major story events)
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
-        plotPointCounter++;
+        plotPointCounter++;  // Increment the counter after a key plot point
     }
     else {
         HandleRandomEncounter();
+
+        currentNode = "start_game";
+        DisplayCurrentNode(); 
         return;
     }
-
     DisplayCurrentNode();
 }
+
+
 
 
 
@@ -100,13 +108,16 @@ bool StoryManager::NeedsAudio() const {
 
 // Handle random encounter by selecting from the pool of random nodes
 void StoryManager::HandleRandomEncounter() {
-    // Select a random node from randomNodes
     int randomIndex = std::rand() % randomNodes.size();
     currentNode = randomNodes[randomIndex];
 
-    // Display the random encounter
     DisplayCurrentNode();
+
+    if (currentNode.find("random_encounter") != std::string::npos) {
+        currentNode = "start_game";
+    }
 }
+
 
 // Helper method to check if the next encounter should be a key plot point
 bool StoryManager::IsKeyPlotPoint() const {
