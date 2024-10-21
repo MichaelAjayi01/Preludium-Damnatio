@@ -39,9 +39,10 @@ int main(int argc, char* argv[]) {
 
     storyManager.LoadStory();
 
+	storyManager.DisplayCurrentNode();
+
     // Game loop
     while (true) {
-        storyManager.DisplayCurrentNode();
         int choice = inputManager.GetPlayerChoice(storyManager.GetCurrentOptions().size());
         storyManager.HandleChoice(choice);
 

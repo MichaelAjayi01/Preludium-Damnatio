@@ -1,8 +1,8 @@
 #include "story_manager.h"
 #include <iostream>
 #include <stdexcept>
-#include <cstdlib> // for rand() and srand()
-#include <ctime>   // for seeding rand()
+#include <cstdlib>
+#include <ctime>
 
 // Constructor
 StoryManager::StoryManager() : currentNode("start"), plotPointCounter(0) {
@@ -25,7 +25,6 @@ void StoryManager::LoadStory() {
         { {0, "stone_room"}, {1, "golden_room"}, {2, "iron_room"} }
     );
 
-    // Random encounter nodes (to be used randomly)
     storyNodes["random_encounter_1"] = StoryNode(
         "You encounter a group of wandering undead. They eye you hungrily.",
         { "Fight", "Run" },
@@ -41,8 +40,6 @@ void StoryManager::LoadStory() {
     // Add more random encounters...
     randomNodes.push_back("random_encounter_1");
     randomNodes.push_back("random_encounter_2");
-
-    // You can continue adding more story nodes and encounters as needed...
 }
 
 // Display the current node's text and options
@@ -55,7 +52,6 @@ void StoryManager::DisplayCurrentNode() {
     }
 }
 
-// Handle player choice and update the current node
 void StoryManager::HandleChoice(int choice) {
     if (choice < 1 || choice > storyNodes[currentNode].options.size()) {
         throw std::out_of_range("Choice out of range");
@@ -65,13 +61,17 @@ void StoryManager::HandleChoice(int choice) {
     if (IsKeyPlotPoint()) {
         // Handle key plot points (e.g., major story events)
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
-        plotPointCounter++;  // Increment the counter after a key plot point
+        plotPointCounter++;
     }
     else {
-        // Handle random encounter
         HandleRandomEncounter();
+        return;
     }
+
+    DisplayCurrentNode();
 }
+
+
 
 // Get current options
 const std::vector<std::string>& StoryManager::GetCurrentOptions() const {
