@@ -63,7 +63,6 @@ void StoryManager::HandleChoice(int choice) {
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
 
         DisplayCurrentNode();
-        currentNode = "start_game";
     }
     else if (IsKeyPlotPoint()) {
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
@@ -74,9 +73,6 @@ void StoryManager::HandleChoice(int choice) {
         HandleRandomEncounter();
     }
 }
-
-
-
 
 
 
@@ -111,11 +107,9 @@ void StoryManager::HandleRandomEncounter() {
     currentNode = randomNodes[randomIndex];
 
     DisplayCurrentNode();
-
-    if (currentNode.find("random_encounter") != std::string::npos) {
-        currentNode = "start_game";
-    }
+    // No further action or resetting of currentNode is needed
 }
+
 
 
 // Helper method to check if the next encounter should be a key plot point

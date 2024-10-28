@@ -1,5 +1,3 @@
-// input_manager.h
-
 #ifndef INPUT_MANAGER_H
 #define INPUT_MANAGER_H
 
@@ -15,4 +13,4 @@ public:
     std::string GetStringInput(const std::string& prompt);
 };
 
-#endif // INPUT_MANAGER_H
+#endif
