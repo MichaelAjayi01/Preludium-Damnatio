@@ -28,13 +28,13 @@ void StoryManager::LoadStory() {
     storyNodes["random_encounter_1"] = StoryNode(
         "You encounter a group of wandering undead. They eye you hungrily.",
         { "Fight", "Run" },
-        { {0, "fight_outcome"}, {1, "run_outcome"} }
+        { {0, "start_game"}, {1, "start_game"} }
     );
 
     storyNodes["random_encounter_2"] = StoryNode(
         "A strange figure offers you a deal. Will you accept the cursed power?",
         { "Accept", "Reject" },
-        { {0, "deal_accept"}, {1, "deal_reject"} }
+        { {0, "start_game"}, {1, "start_game"} }
     );
 
     // Add more random encounters...
@@ -42,10 +42,9 @@ void StoryManager::LoadStory() {
     randomNodes.push_back("random_encounter_2");
 }
 
-// Display the current node's text and options
 void StoryManager::DisplayCurrentNode() {
     const StoryNode& node = storyNodes[currentNode];
-	std::cout << currentNode << std::endl; //debug current node.
+	std::cout << currentNode << std::endl;
     std::cout << node.text << std::endl;
 
     for (size_t i = 0; i < node.options.size(); ++i) {
@@ -58,24 +57,24 @@ void StoryManager::HandleChoice(int choice) {
         throw std::out_of_range("Choice out of range");
     }
 
-    // Check if we're currently at a random node
-    bool wasRandomEncounter = !IsKeyPlotPoint();
+    bool isRandomEncounter = std::find(randomNodes.begin(), randomNodes.end(), currentNode) != randomNodes.end();
 
-    // Determine if this is a key plot point or random encounter
-    if (IsKeyPlotPoint()) {
-        // Handle key plot points (e.g., major story events)
+    if (isRandomEncounter) {
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
-        plotPointCounter++;  // Increment the counter after a key plot point
+
+        DisplayCurrentNode();
+        currentNode = "start_game";
+    }
+    else if (IsKeyPlotPoint()) {
+        currentNode = storyNodes[currentNode].nextNodes[choice - 1];
+        plotPointCounter++;
+        DisplayCurrentNode();
     }
     else {
         HandleRandomEncounter();
-
-        currentNode = "start_game";
-        DisplayCurrentNode(); 
-        return;
     }
-    DisplayCurrentNode();
 }
+
 
 
 
