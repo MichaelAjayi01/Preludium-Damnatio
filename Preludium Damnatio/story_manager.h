@@ -35,6 +35,8 @@ public:
 
     void HandleChoice(int choice);
 
+	void HandleMainEncounter();
+
     const std::vector<std::string>& GetCurrentOptions() const;
 
     const std::string& GetCurrentAsciiArt() const;

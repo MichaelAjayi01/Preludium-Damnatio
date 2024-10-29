@@ -95,8 +95,20 @@ void StoryManager::HandleChoice(int choice) {
         // Increment encounterCounter for each random encounter
         encounterCounter++;
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
+
+        // Display the current node
         DisplayCurrentNode();
-		std::cout << "Encounter Counter: " << encounterCounter << std::endl;
+        std::cout << "Encounter Counter: " << encounterCounter << std::endl;
+
+        // Check if we reached the limit for encounters
+        if (encounterCounter >= 3) {
+            // Reset encounterCounter for future encounters
+            encounterCounter = 0;
+
+            // Handle the main encounter
+            HandleMainEncounter();
+            return; // Exit this function after handling the main encounter
+        }
     }
     else if (IsKeyPlotPoint() && encounterCounter >= 3) {
         // Only allow main node transition after 3 random encounters
@@ -113,6 +125,33 @@ void StoryManager::HandleChoice(int choice) {
         HandleRandomEncounter();
     }
 }
+
+void StoryManager::HandleMainEncounter() {
+    // Create a vector to hold all main encounter nodes
+    std::vector<std::string> mainEncounters;
+
+    // Iterate over the storyNodes to find those with "main" in their names
+    for (const auto& pair : storyNodes) {
+        if (pair.first.find("main") == 0) {
+            mainEncounters.push_back(pair.first);
+        }
+    }
+
+    // Select a random main encounter from the available options
+    if (!mainEncounters.empty()) {
+        int randomIndex = std::rand() % mainEncounters.size();
+        currentNode = mainEncounters[randomIndex]; // Set currentNode to a random main encounter
+        DisplayCurrentNode();
+    }
+    else {
+        std::cout << "No main encounters available!" << std::endl;
+        // Fallback logic if no main encounters exist
+        currentNode = "selection_menu"; // Fallback to selection menu
+        DisplayCurrentNode();
+    }
+}
+
+
 
 
 // Get current options
