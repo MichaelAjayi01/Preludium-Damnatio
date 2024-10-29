@@ -4,12 +4,13 @@
 #include <cstdlib>
 #include <ctime>
 
-StoryManager::StoryManager()
+// Constructor implementation
+StoryManager::StoryManager(InputManager& inputManager)
     : currentNode("start"),
     plotPointCounter(0),
-    encounterCounter(0)
+    encounterCounter(0),
+    inputManager(inputManager)
 {
-    // Seed the random number generator
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
 
@@ -92,29 +93,24 @@ void StoryManager::HandleChoice(int choice) {
     bool isRandomEncounter = std::find(randomNodes.begin(), randomNodes.end(), currentNode) != randomNodes.end();
 
     if (isRandomEncounter) {
-        // Increment encounterCounter for each random encounter
         encounterCounter++;
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
 
-        // Display the current node
         DisplayCurrentNode();
         std::cout << "Encounter Counter: " << encounterCounter << std::endl;
 
-        // Check if we reached the limit for encounters
         if (encounterCounter >= 3) {
-            // Reset encounterCounter for future encounters
             encounterCounter = 0;
 
-            // Handle the main encounter
             HandleMainEncounter();
-            return; // Exit this function after handling the main encounter
+            return;
         }
     }
     else if (IsKeyPlotPoint() && encounterCounter >= 3) {
         // Only allow main node transition after 3 random encounters
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
         plotPointCounter++;
-        encounterCounter = 0; // Reset for future encounters
+        encounterCounter = 0;
         DisplayCurrentNode();
 
         // Print encounter values after incrementing plotPointCounter
@@ -127,6 +123,9 @@ void StoryManager::HandleChoice(int choice) {
 }
 
 void StoryManager::HandleMainEncounter() {
+
+    inputManager.ClearConsole();
+
     // Create a vector to hold all main encounter nodes
     std::vector<std::string> mainEncounters;
 

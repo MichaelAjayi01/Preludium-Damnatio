@@ -32,10 +32,12 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialize managers
-    StoryManager storyManager;
+// Initialize managers
     InputManager inputManager;
-    RenderManager renderManager(renderer); // Pass the renderer to RenderManager
+    StoryManager storyManager(inputManager); 
+    RenderManager renderManager(renderer);
     AudioManager audioManager;
+
 
     storyManager.LoadStory();
 

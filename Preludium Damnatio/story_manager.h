@@ -1,6 +1,7 @@
 #ifndef STORY_MANAGER_H
 #define STORY_MANAGER_H
 
+#include "input_manager.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -27,7 +28,7 @@ public:
 // StoryManager class for managing the flow of the story
 class StoryManager {
 public:
-    StoryManager();
+    StoryManager(InputManager& inputManager);
 
     void LoadStory();
 
@@ -59,6 +60,8 @@ private:
     std::vector<std::string> randomNodes;
 
     bool IsKeyPlotPoint() const;
+
+	InputManager& inputManager;
 };
 
 #endif

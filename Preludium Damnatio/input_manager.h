@@ -10,8 +10,10 @@ public:
 
     std::string GetStringInput(const std::string& prompt);
 
-private:
     void ClearConsole();
+
+private:
+
 };
 
 #endif
