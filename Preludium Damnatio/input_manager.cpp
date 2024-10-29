@@ -1,5 +1,15 @@
-// input_manager.cpp
 #include "input_manager.h"
+#include <limits>  // For std::numeric_limits
+#include <cstdlib> // For std::system
+
+// Clear the console screen
+void InputManager::ClearConsole() {
+#ifdef _WIN32
+    std::system("cls"); // Clear console for Windows
+#else
+    std::system("clear"); // Clear console for Unix/Linux/Mac
+#endif
+}
 
 // Get player choice from a list of options
 int InputManager::GetPlayerChoice(int optionsCount) {
@@ -16,6 +26,7 @@ int InputManager::GetPlayerChoice(int optionsCount) {
         }
         else {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard any leftover input
+            ClearConsole(); // Clear the console after valid input
             break; // Valid choice, exit loop
         }
     }
@@ -27,5 +38,6 @@ std::string InputManager::GetStringInput(const std::string& prompt) {
     std::string input;
     std::cout << prompt;
     std::getline(std::cin, input); // Get the entire line as input
+    ClearConsole(); // Clear the console after getting the input
     return input;
 }

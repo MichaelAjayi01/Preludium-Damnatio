@@ -48,15 +48,15 @@ public:
     void HandleRandomEncounter();
 
 private:
-    std::map<std::string, StoryNode> storyNodes; // All story nodes mapped by their identifier
-    std::string currentNode; // Identifier for the current node
+    std::map<std::string, StoryNode> storyNodes; 
+    std::string currentNode; 
 
-    int plotPointCounter; // Counter for tracking progress towards key plot points
+    int plotPointCounter; 
+	int encounterCounter;
 
-    std::vector<std::string> randomNodes; // List of identifiers for random encounter nodes
+    std::vector<std::string> randomNodes;
 
-    // Helper method to determine if the next encounter should be random or a key plot point
     bool IsKeyPlotPoint() const;
 };
 
-#endif // STORY_MANAGER_H
+#endif

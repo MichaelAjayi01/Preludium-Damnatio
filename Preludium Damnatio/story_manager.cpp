@@ -25,6 +25,13 @@ void StoryManager::LoadStory() {
         { {0, "stone_room"}, {1, "golden_room"}, {2, "iron_room"} }
     );
 
+    storyNodes["main_lich_king_encounter"] = StoryNode(
+        "The Lich King stands before you, his skeletal gaze piercing into your soul. This is the moment of truth.",
+        { "Fight", "Negotiate", "Flee" },
+        { {0, "battle"}, {1, "negotiation"}, {2, "escape"} }
+    );
+
+
     storyNodes["random_encounter_1"] = StoryNode(
         "You encounter a group of wandering undead. They eye you hungrily.",
         { "Fight", "Run" },
@@ -55,6 +62,7 @@ void StoryManager::LoadStory() {
 		{ {0, "selection_menu"}, {1, "selection_menu"} }
 	);
 
+
     // Add more random encounters...
     randomNodes.push_back("random_encounter_1");
     randomNodes.push_back("random_encounter_2");
@@ -81,20 +89,26 @@ void StoryManager::HandleChoice(int choice) {
     bool isRandomEncounter = std::find(randomNodes.begin(), randomNodes.end(), currentNode) != randomNodes.end();
 
     if (isRandomEncounter) {
+        // Increment encounterCounter for each random encounter
+        encounterCounter++;
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
-
         DisplayCurrentNode();
     }
-    else if (IsKeyPlotPoint()) {
+    else if (IsKeyPlotPoint() && encounterCounter >= 3) {
+        // Only allow main node transition after 3 random encounters
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
         plotPointCounter++;
+        encounterCounter = 0;
         DisplayCurrentNode();
     }
     else {
+        // Initiate a new random encounter
         HandleRandomEncounter();
     }
-}
 
+	//print encounter values
+	std::cout << "Plot Point Counter: " << plotPointCounter << std::endl;
+}
 
 
 // Get current options
@@ -128,8 +142,8 @@ void StoryManager::HandleRandomEncounter() {
     currentNode = randomNodes[randomIndex];
 
     DisplayCurrentNode();
-    // No further action or resetting of currentNode is needed
 }
+
 
 
 

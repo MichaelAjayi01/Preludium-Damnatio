@@ -6,11 +6,12 @@
 
 class InputManager {
 public:
-    // Get player choice from a list of options
     int GetPlayerChoice(int optionsCount);
 
-    // Get a string input from the player
     std::string GetStringInput(const std::string& prompt);
+
+private:
+    void ClearConsole();
 };
 
 #endif
