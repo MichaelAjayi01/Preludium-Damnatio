@@ -86,6 +86,7 @@ void StoryManager::DisplayCurrentNode() {
 }
 
 void StoryManager::HandleChoice(int choice) {
+    // Validate choice
     if (choice < 1 || choice > storyNodes[currentNode].options.size()) {
         throw std::out_of_range("Choice out of range");
     }
@@ -93,28 +94,30 @@ void StoryManager::HandleChoice(int choice) {
     bool isRandomEncounter = std::find(randomNodes.begin(), randomNodes.end(), currentNode) != randomNodes.end();
 
     if (isRandomEncounter) {
+        // Increment encounter counter for random encounters
         encounterCounter++;
+
+        // Move to the next node based on player's choice
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
 
-        DisplayCurrentNode();
-        std::cout << "Encounter Counter: " << encounterCounter << std::endl;
+        // Only display if it's not the third encounter
+        if (encounterCounter < 3) {
+            DisplayCurrentNode();
+            std::cout << "Encounter Counter: " << encounterCounter << std::endl;
+        }
 
+        // Check if the player has had 3 encounters
         if (encounterCounter >= 3) {
-            encounterCounter = 0;
-
-            HandleMainEncounter();
+            encounterCounter = 0; // Reset counter for next set of encounters
+            HandleMainEncounter(); // Move to a main encounter
             return;
         }
     }
     else if (IsKeyPlotPoint() && encounterCounter >= 3) {
-        // Only allow main node transition after 3 random encounters
+        // Handle key plot point after three encounters
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
         plotPointCounter++;
-        encounterCounter = 0;
-        DisplayCurrentNode();
-
-        // Print encounter values after incrementing plotPointCounter
-        std::cout << "Plot Point Counter: " << plotPointCounter << std::endl;
+        encounterCounter = 0; // Reset after transitioning to the main plot point
     }
     else {
         // Initiate a new random encounter
@@ -123,7 +126,6 @@ void StoryManager::HandleChoice(int choice) {
 }
 
 void StoryManager::HandleMainEncounter() {
-
     inputManager.ClearConsole();
 
     // Create a vector to hold all main encounter nodes
@@ -140,6 +142,8 @@ void StoryManager::HandleMainEncounter() {
     if (!mainEncounters.empty()) {
         int randomIndex = std::rand() % mainEncounters.size();
         currentNode = mainEncounters[randomIndex]; // Set currentNode to a random main encounter
+
+        // Now display the current node
         DisplayCurrentNode();
     }
     else {
@@ -149,7 +153,6 @@ void StoryManager::HandleMainEncounter() {
         DisplayCurrentNode();
     }
 }
-
 
 
 
