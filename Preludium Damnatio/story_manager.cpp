@@ -4,11 +4,15 @@
 #include <cstdlib>
 #include <ctime>
 
-// Constructor
-StoryManager::StoryManager() : currentNode("start"), plotPointCounter(0) {
+StoryManager::StoryManager()
+    : currentNode("start"),
+    plotPointCounter(0),
+    encounterCounter(0)
+{
     // Seed the random number generator
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
+
 
 // Load the story structure
 void StoryManager::LoadStory() {
@@ -73,7 +77,6 @@ void StoryManager::LoadStory() {
 
 void StoryManager::DisplayCurrentNode() {
     const StoryNode& node = storyNodes[currentNode];
-	std::cout << currentNode << std::endl;
     std::cout << node.text << std::endl;
 
     for (size_t i = 0; i < node.options.size(); ++i) {
@@ -93,21 +96,22 @@ void StoryManager::HandleChoice(int choice) {
         encounterCounter++;
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
         DisplayCurrentNode();
+		std::cout << "Encounter Counter: " << encounterCounter << std::endl;
     }
     else if (IsKeyPlotPoint() && encounterCounter >= 3) {
         // Only allow main node transition after 3 random encounters
         currentNode = storyNodes[currentNode].nextNodes[choice - 1];
         plotPointCounter++;
-        encounterCounter = 0;
+        encounterCounter = 0; // Reset for future encounters
         DisplayCurrentNode();
+
+        // Print encounter values after incrementing plotPointCounter
+        std::cout << "Plot Point Counter: " << plotPointCounter << std::endl;
     }
     else {
         // Initiate a new random encounter
         HandleRandomEncounter();
     }
-
-	//print encounter values
-	std::cout << "Plot Point Counter: " << plotPointCounter << std::endl;
 }
 
 
@@ -143,8 +147,6 @@ void StoryManager::HandleRandomEncounter() {
 
     DisplayCurrentNode();
 }
-
-
 
 
 // Helper method to check if the next encounter should be a key plot point
