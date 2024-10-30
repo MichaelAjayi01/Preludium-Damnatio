@@ -16,10 +16,18 @@ int main(int argc, char* argv[]) {
         return -1; // Exit if initialization fails
     }
 
+    // Initialize SDL_ttf
+    if (TTF_Init() == -1) {
+        std::cerr << "SDL_ttf could not initialize! TTF_Error: " << TTF_GetError() << std::endl;
+        SDL_Quit();
+        return -1; // Exit if SDL_ttf initialization fails
+    }
+
     // Create SDL window and renderer
     SDL_Window* window = SDL_CreateWindow("Preludium Damnatio", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
     if (!window) {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
+        TTF_Quit(); // Clean up SDL_ttf
         SDL_Quit();
         return -1; // Exit if window creation fails
     }
@@ -28,6 +36,7 @@ int main(int argc, char* argv[]) {
     if (!renderer) {
         std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         SDL_DestroyWindow(window);
+        TTF_Quit(); // Clean up SDL_ttf
         SDL_Quit();
         return -1; // Exit if renderer creation fails
     }
@@ -40,7 +49,7 @@ int main(int argc, char* argv[]) {
 
     // Load the story and the font
     storyManager.LoadStory();
-    if (!renderManager.LoadFont("assets/fonts/BonaNovaSC-Regular.ttf", 24)) { // Ensure correct path to font
+    if (!renderManager.LoadFont("C:\\Users\\Michael\\source\\repos\\Preludium Damnatio\\Preludium-Damnatio\\x64\\Release\\assets\\fonts\\BonaNovaSC-Regular.ttf", 24)) {
         std::cerr << "Failed to load font." << std::endl;
         return -1; // Exit if font loading fails
     }
@@ -68,6 +77,7 @@ int main(int argc, char* argv[]) {
     // Clean up and quit
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit(); // Clean up SDL_ttf
     SDL_Quit();
 
     return 0;

@@ -33,6 +33,9 @@ void RenderManager::Present() {
 // Load and set the font
 bool RenderManager::LoadFont(const std::string& fontPath, int fontSize) {
     font = TTF_OpenFont(fontPath.c_str(), fontSize);
+	if (font == nullptr) {
+		std::cerr << "Failed to load font at " << fontPath << ": " << TTF_GetError() << std::endl;
+	}
     return font != nullptr;
 }
 
