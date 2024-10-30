@@ -205,6 +205,5 @@ void StoryManager::HandleRandomEncounter() {
 
 // Helper method to check if the next encounter should be a key plot point
 bool StoryManager::IsKeyPlotPoint() const {
-    // In this example, every 3rd encounter is a key plot point
     return plotPointCounter % 3 == 0;
 }
