@@ -4,15 +4,16 @@
 #include <cstdlib>
 #include <ctime>
 
-// Constructor implementation
 StoryManager::StoryManager(InputManager& inputManager)
     : currentNode("start"),
     plotPointCounter(0),
     encounterCounter(0),
-    inputManager(inputManager)
+    inputManager(inputManager),
+    renderManager(nullptr) // Initialize to nullptr
 {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
+
 
 
 // Load the story structure
@@ -78,10 +79,18 @@ void StoryManager::LoadStory() {
 
 void StoryManager::DisplayCurrentNode() {
     const StoryNode& node = storyNodes[currentNode];
-    std::cout << node.text << std::endl;
 
+    // Define a color for the text, you can customize this
+    SDL_Color textColor = { 255, 255, 255, 255 }; // White color
+
+    // Render the node text
+    if (renderManager) {
+        renderManager->RenderTextToScreen(node.text, 10, 10, textColor); // Adjust x, y as needed
+    }
+
+    // Render the options
     for (size_t i = 0; i < node.options.size(); ++i) {
-        std::cout << (i + 1) << ": " << node.options[i] << std::endl;
+        renderManager->RenderTextToScreen(std::to_string(i + 1) + ": " + node.options[i], 10, 50 + static_cast<int>(i * 30), textColor); // Adjust y for spacing
     }
 }
 
@@ -98,12 +107,13 @@ void StoryManager::HandleChoice(int choice) {
         encounterCounter++;
 
         // Move to the next node based on player's choice
-        currentNode = storyNodes[currentNode].nextNodes[choice - 1];
+        currentNode = storyNodes[currentNode].nextNodes[choice - 1].second; // Change here
 
         // Only display if it's not the third encounter
         if (encounterCounter < 3) {
             DisplayCurrentNode();
-            std::cout << "Encounter Counter: " << encounterCounter << std::endl;
+            // Instead of std::cout, you can update the display with encounter info if needed
+            // renderManager->RenderTextToScreen("Encounter Counter: " + std::to_string(encounterCounter), 10, 200, textColor);
         }
 
         // Check if the player has had 3 encounters
@@ -115,7 +125,7 @@ void StoryManager::HandleChoice(int choice) {
     }
     else if (IsKeyPlotPoint() && encounterCounter >= 3) {
         // Handle key plot point after three encounters
-        currentNode = storyNodes[currentNode].nextNodes[choice - 1];
+        currentNode = storyNodes[currentNode].nextNodes[choice - 1].second; // Change here
         plotPointCounter++;
         encounterCounter = 0; // Reset after transitioning to the main plot point
     }
@@ -155,6 +165,9 @@ void StoryManager::HandleMainEncounter() {
 }
 
 
+void StoryManager::SetRenderManager(RenderManager* renderManager) {
+    this->renderManager = renderManager;
+}
 
 // Get current options
 const std::vector<std::string>& StoryManager::GetCurrentOptions() const {

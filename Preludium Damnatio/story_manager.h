@@ -1,67 +1,58 @@
-#ifndef STORY_MANAGER_H
-#define STORY_MANAGER_H
+#ifndef STORY_MANAGER_H // Ensure this line is at the top of your file
+#define STORY_MANAGER_H // This defines the header guard
 
+// Include necessary headers
+#include "render_manager.h"
 #include "input_manager.h"
 #include <string>
 #include <vector>
 #include <map>
+#include <algorithm>
 
-// StoryNode class representing a single node in the story
 class StoryNode {
 public:
     std::string text;
     std::vector<std::string> options;
-    std::map<int, std::string> nextNodes;
+    std::vector<std::pair<int, std::string>> nextNodes;
     std::string asciiArt;
     std::string audioFile;
 
     // Default constructor
     StoryNode() = default;
 
-    // Constructor with parameters
-    StoryNode(const std::string& text, const std::vector<std::string>& options,
-        const std::map<int, std::string>& nextNodes,
-        const std::string& asciiArt = "", const std::string& audioFile = "")
-        : text(text), options(options), nextNodes(nextNodes), asciiArt(asciiArt), audioFile(audioFile) {}
+    // Custom constructor
+    StoryNode(const std::string& text, const std::vector<std::string>& options, const std::vector<std::pair<int, std::string>>& nextNodes)
+        : text(text), options(options), nextNodes(nextNodes) {}
 };
 
-// StoryManager class for managing the flow of the story
+
 class StoryManager {
 public:
     StoryManager(InputManager& inputManager);
-
     void LoadStory();
-
     void DisplayCurrentNode();
-
     void HandleChoice(int choice);
+    void SetRenderManager(RenderManager* renderManager);
 
-	void HandleMainEncounter();
-
+    // Public methods for accessing story details
     const std::vector<std::string>& GetCurrentOptions() const;
-
     const std::string& GetCurrentAsciiArt() const;
-
     const std::string& GetCurrentAudio() const;
-
     bool NeedsAsciiArt() const;
-
     bool NeedsAudio() const;
 
-    void HandleRandomEncounter();
-
 private:
-    std::map<std::string, StoryNode> storyNodes; 
-    std::string currentNode; 
-
-    int plotPointCounter; 
-	int encounterCounter;
-
+    std::map<std::string, StoryNode> storyNodes;
     std::vector<std::string> randomNodes;
+    std::string currentNode;
+    int plotPointCounter;
+    int encounterCounter;
+    InputManager& inputManager;
+    RenderManager* renderManager; // Pointer to RenderManager
 
+    void HandleMainEncounter();
+    void HandleRandomEncounter();
     bool IsKeyPlotPoint() const;
-
-	InputManager& inputManager;
 };
 
-#endif
+#endif // STORY_MANAGER_H // This should match the #ifndef directive

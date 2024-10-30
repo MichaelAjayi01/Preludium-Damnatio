@@ -33,16 +33,19 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialize managers
-// Initialize managers
     InputManager inputManager;
-    StoryManager storyManager(inputManager); 
+    StoryManager storyManager(inputManager);
     RenderManager renderManager(renderer);
     AudioManager audioManager;
 
-
+    // Load the story and the font
     storyManager.LoadStory();
+    if (!renderManager.LoadFont("path/to/your/font.ttf", 24)) { // Ensure correct path to font
+        std::cerr << "Failed to load font." << std::endl;
+        return -1; // Exit if font loading fails
+    }
 
-	storyManager.DisplayCurrentNode();
+    storyManager.DisplayCurrentNode();
 
     // Game loop
     while (true) {
@@ -51,11 +54,15 @@ int main(int argc, char* argv[]) {
 
         // Play audio and render art if necessary
         if (storyManager.NeedsAsciiArt()) {
-            renderManager.RenderAsciiArt(storyManager.GetCurrentAsciiArt());
+            renderManager.RenderAsciiArtToScreen(storyManager.GetCurrentAsciiArt(), 100, 100); // Adjust position as needed
         }
+
         if (storyManager.NeedsAudio()) {
             audioManager.PlayAudio(storyManager.GetCurrentAudio());
         }
+
+        // Present rendered content
+        renderManager.Present();
     }
 
     // Clean up and quit
