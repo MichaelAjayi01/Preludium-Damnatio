@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Michael\Downloads\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\include;C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\lib\x64;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2.lib;SDL2main.lib;SDL2.lib;SDL2main.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Michael\Downloads\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\lib;C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\lib\x64;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2.lib;SDL2main.lib;SDL2.lib;SDL2main.lib;SDL2_tff.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,15 +121,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\include;C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Michael\Downloads\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\include;C:\Users\Michael\Downloads\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\include;C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2.lib;SDL2main.lib;SDL2.lib;SDL2main.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\lib\x64;C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Michael\Desktop\SDL2\SDL2-2.30.8\lib\x64;C:\Users\Michael\Downloads\SDL2_ttf-devel-2.22.0-VC\SDL2_ttf-2.22.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

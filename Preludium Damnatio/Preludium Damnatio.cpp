@@ -4,6 +4,7 @@
 #include "render_manager.h"
 #include "audio_manager.h"
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <iostream>
 
 #define SDL_MAIN_HANDLED

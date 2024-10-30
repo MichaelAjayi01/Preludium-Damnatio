@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 
+
 // Constructor
 RenderManager::RenderManager(SDL_Renderer* renderer) : renderer(renderer) {
     if (!renderer) {
