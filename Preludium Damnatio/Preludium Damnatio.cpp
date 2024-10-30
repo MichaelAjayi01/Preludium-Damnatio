@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
     // Load the story and the font
     storyManager.LoadStory();
-    if (!renderManager.LoadFont("path/to/your/font.ttf", 24)) { // Ensure correct path to font
+    if (!renderManager.LoadFont("assets/fonts/BonaNovaSC-Regular.ttf", 24)) { // Ensure correct path to font
         std::cerr << "Failed to load font." << std::endl;
         return -1; // Exit if font loading fails
     }

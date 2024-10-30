@@ -16,6 +16,9 @@
     <Filter Include="Source Files\assets">
       <UniqueIdentifier>{b7b296ec-8c4b-47f5-8919-43ec5db8eaf7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\assets\fonts">
+      <UniqueIdentifier>{aa737194-afc5-48a3-9135-4c9719c747af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Preludium Damnatio.cpp">
@@ -47,5 +50,16 @@
     <ClInclude Include="story_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="BonaNovaSC-Italic.ttf">
+      <Filter>Source Files\assets\fonts</Filter>
+    </Font>
+    <Font Include="BonaNovaSC-Regular.ttf">
+      <Filter>Source Files\assets\fonts</Filter>
+    </Font>
+    <Font Include="BonaNovaSC-Bold.ttf">
+      <Filter>Source Files\assets\fonts</Filter>
+    </Font>
   </ItemGroup>
 </Project>

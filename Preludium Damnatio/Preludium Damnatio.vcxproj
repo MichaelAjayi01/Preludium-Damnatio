@@ -145,6 +145,11 @@
     <ClInclude Include="render_manager.h" />
     <ClInclude Include="story_manager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="BonaNovaSC-Bold.ttf" />
+    <Font Include="BonaNovaSC-Italic.ttf" />
+    <Font Include="BonaNovaSC-Regular.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
