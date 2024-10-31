@@ -80,10 +80,8 @@ void StoryManager::DisplayCurrentNode() {
     // Define a color for the text, you can customize this
     SDL_Color textColor = { 255, 255, 255, 255 }; // White color
 
-    // Render the node text
-
     renderManager.RenderTextToScreen(node.text, 10, 10, textColor); // Adjust x, y as needed
-
+    //print out current node for debugging
 
     // Render the options
     for (size_t i = 0; i < node.options.size(); ++i) {
@@ -109,7 +107,6 @@ void StoryManager::HandleChoice(int choice) {
         // Only display if it's not the third encounter
         if (encounterCounter < 3) {
             DisplayCurrentNode();
-            // Instead of std::cout, you can update the display with encounter info if needed
             // renderManager->RenderTextToScreen("Encounter Counter: " + std::to_string(encounterCounter), 10, 200, textColor);
         }
 

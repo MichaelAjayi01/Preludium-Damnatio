@@ -1,5 +1,5 @@
-#ifndef STORY_MANAGER_H // Ensure this line is at the top of your file
-#define STORY_MANAGER_H // This defines the header guard
+#ifndef STORY_MANAGER_H
+#define STORY_MANAGER_H
 
 // Include necessary headers
 #include "render_manager.h"

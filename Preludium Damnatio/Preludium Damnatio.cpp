@@ -1,12 +1,13 @@
-// main.cpp
-
+#define _CRT_SECURE_NO_WARNINGS
 #include "story_manager.h"
 #include "input_manager.h"
 #include "render_manager.h"
-#include "audio_manager.h" 
+#include "audio_manager.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <iostream>
+#include <direct.h>  // Include this for _getcwd
+#include <cstring>
 
 #define SDL_MAIN_HANDLED
 
@@ -17,6 +18,17 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     std::cout << "SDL initialized successfully." << std::endl;
+
+    // Get and print the current working directory
+    char cwd[1024];
+    if (_getcwd(cwd, sizeof(cwd)) != NULL) {
+        std::cout << "Current working directory: " << cwd << std::endl;
+    }
+    else {
+        std::cerr << "Error getting current working directory." << std::endl;
+        SDL_Quit();
+        return -1;
+    }
 
     // Initialize SDL_ttf
     if (TTF_Init() == -1) {
@@ -64,9 +76,21 @@ int main(int argc, char* argv[]) {
         std::cout << "RenderManager initialized with a valid renderer." << std::endl;
     }
 
-    // Load the story and font
+    // Load the story
     storyManager.LoadStory();
-    if (!renderManager.LoadFont("C:\\Users\\Michael\\source\\repos\\Preludium Damnatio\\Preludium-Damnatio\\x64\\Release\\assets\\fonts\\BonaNovaSC-Regular.ttf", 24)) {
+
+    // Construct the path to the font file
+    std::string fontPath = std::string(cwd) + "\\assets\\fonts\\BonaNovaSC-Regular.ttf";
+    std::cout << "Attempting to load font from: " << fontPath << std::endl;
+
+    // Check if the font file can be opened
+    FILE* file;
+    if (fopen_s(&file, fontPath.c_str(), "r") == 0) {
+        std::cout << "Font file is accessible." << std::endl;
+        fclose(file);
+    }
+
+    if (!renderManager.LoadFont(fontPath.c_str(), 24)) {
         std::cerr << "Failed to load font." << std::endl;
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
