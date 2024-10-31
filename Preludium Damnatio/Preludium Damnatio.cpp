@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
         fclose(file);
     }
 
-    if (!renderManager.LoadFont(fontPath.c_str(), 24)) {
+    if (!renderManager.LoadFont(fontPath.c_str(), 18)) {
         std::cerr << "Failed to load font." << std::endl;
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
@@ -100,7 +100,10 @@ int main(int argc, char* argv[]) {
     }
     std::cout << "Font loaded successfully." << std::endl;
 
-    storyManager.DisplayCurrentNode();
+    // Display the initial story node once after loading the story
+    renderManager.Clear();              // Clear screen for fresh render
+    storyManager.DisplayCurrentNode();   // Display the first story node
+    renderManager.Present();             // Present to ensure it's visible
     std::cout << "Story loaded successfully. Starting game loop." << std::endl;
 
     // Game loop
@@ -110,18 +113,24 @@ int main(int argc, char* argv[]) {
         int choice = inputManager.GetPlayerChoice(storyManager.GetCurrentOptions().size());
         storyManager.HandleChoice(choice);
 
+        // Display the current node based on the choice made
+        storyManager.DisplayCurrentNode();
+
+        // Render ASCII art if needed
         if (storyManager.NeedsAsciiArt()) {
             renderManager.RenderAsciiArtToScreen(storyManager.GetCurrentAsciiArt(), 100, 100);
             std::cout << "Rendered ASCII art to screen." << std::endl;
         }
 
+        // Play audio if needed
         if (storyManager.NeedsAudio()) {
             audioManager.PlayAudio(storyManager.GetCurrentAudio());
             std::cout << "Played audio." << std::endl;
         }
 
-        renderManager.Present(); // Present rendered content
+        renderManager.Present(); // Present rendered content to the screen
         std::cout << "Presented content to the screen." << std::endl;
+
     }
 
     // Clean up and quit

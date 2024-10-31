@@ -56,6 +56,9 @@ void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SD
         return; // Exit if text surface creation fails
     }
 
+    // Set up the destination rectangle for rendering the texture
+    SDL_Rect dstRect = { x, y, textSurface->w, textSurface->h };
+
     // Create a texture from the surface
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_FreeSurface(textSurface); // Free the surface after creating the texture
@@ -63,9 +66,6 @@ void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SD
         std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
         return; // Exit if texture creation fails
     }
-
-    // Set up the destination rectangle for rendering the texture
-    SDL_Rect dstRect = { x, y, textSurface->w, textSurface->h };
 
     // Render the texture to the screen
     if (SDL_RenderCopy(renderer, texture, nullptr, &dstRect) < 0) {
@@ -75,6 +75,7 @@ void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SD
     // Clean up the texture
     SDL_DestroyTexture(texture);
 }
+
 
 // Render ASCII art to the SDL window
 void RenderManager::RenderAsciiArtToScreen(const std::string& asciiArt, int startX, int startY, SDL_Color color) {

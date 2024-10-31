@@ -75,19 +75,27 @@ void StoryManager::LoadStory() {
 }
 
 void StoryManager::DisplayCurrentNode() {
+    // Fetch the current node to display
     const StoryNode& node = storyNodes[currentNode];
 
-    // Define a color for the text, you can customize this
+    // Debugging output: print the current node ID and its text
+    std::cout << "Displaying Current Node: " << currentNode << std::endl;
+    std::cout << "Node Text: " << node.text << std::endl;
+
+    // Define a color for the text
     SDL_Color textColor = { 255, 255, 255, 255 }; // White color
 
+    // Render the node's main text
     renderManager.RenderTextToScreen(node.text, 10, 10, textColor); // Adjust x, y as needed
-    //print out current node for debugging
 
-    // Render the options
+    // Render each option with spacing, adjusting y-position for each line
     for (size_t i = 0; i < node.options.size(); ++i) {
-        renderManager.RenderTextToScreen(std::to_string(i + 1) + ": " + node.options[i], 10, 50 + static_cast<int>(i * 30), textColor); // Adjust y for spacing
+        std::string optionText = std::to_string(i + 1) + ": " + node.options[i];
+        std::cout << "Option " << i + 1 << ": " << optionText << std::endl; // Debugging output for each option
+        renderManager.RenderTextToScreen(optionText, 10, 50 + static_cast<int>(i * 30), textColor); // Adjust y for spacing
     }
 }
+
 
 void StoryManager::HandleChoice(int choice) {
     // Validate choice
