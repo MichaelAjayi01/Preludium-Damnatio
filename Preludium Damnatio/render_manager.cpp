@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 // Constructor
 RenderManager::RenderManager(SDL_Renderer* renderer) : renderer(renderer), font(nullptr), initialized(renderer != nullptr) {
@@ -42,39 +43,53 @@ bool RenderManager::LoadFont(const std::string& fontPath, int fontSize) {
     return font != nullptr;
 }
 
-void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color) {
+#include <sstream> // Include for std::istringstream
+
+void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color, int maxWidth) {
     // Check if font is loaded
     if (font == nullptr) {
         std::cerr << "Font not loaded." << std::endl;
         return; // Exit if font is not loaded
     }
 
-    // Create a surface from the text
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), color);
-    if (!textSurface) {
-        std::cerr << "Failed to create text surface: " << TTF_GetError() << std::endl;
-        return; // Exit if text surface creation fails
+    std::istringstream iss(text);
+    std::string word;
+    std::string line;
+
+    while (iss >> word) {
+        // Create a surface for the current line
+        SDL_Surface* lineSurface = TTF_RenderText_Solid(font, (line + word + " ").c_str(), color);
+
+        // Check if the line width exceeds maxWidth
+        if (lineSurface && lineSurface->w > maxWidth) {
+            // Render the current line
+            SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, lineSurface);
+            SDL_FreeSurface(lineSurface); // Free the surface after creating the texture
+            SDL_Rect dstRect = { x, y, lineSurface->w, lineSurface->h };
+            SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+            SDL_DestroyTexture(texture);
+
+            // Move down for the next line
+            y += lineSurface->h;
+            line.clear(); // Clear the current line for the next line
+        }
+
+        line += word + " "; // Add the word to the current line
     }
 
-    // Set up the destination rectangle for rendering the texture
-    SDL_Rect dstRect = { x, y, textSurface->w, textSurface->h };
-
-    // Create a texture from the surface
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_FreeSurface(textSurface); // Free the surface after creating the texture
-    if (!texture) {
-        std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
-        return; // Exit if texture creation fails
+    // Render any remaining text in the line
+    if (!line.empty()) {
+        SDL_Surface* lineSurface = TTF_RenderText_Solid(font, line.c_str(), color);
+        if (lineSurface) {
+            SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, lineSurface);
+            SDL_FreeSurface(lineSurface);
+            SDL_Rect dstRect = { x, y, lineSurface->w, lineSurface->h };
+            SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+            SDL_DestroyTexture(texture);
+        }
     }
-
-    // Render the texture to the screen
-    if (SDL_RenderCopy(renderer, texture, nullptr, &dstRect) < 0) {
-        std::cerr << "Failed to render texture: " << SDL_GetError() << std::endl;
-    }
-
-    // Clean up the texture
-    SDL_DestroyTexture(texture);
 }
+
 
 
 // Render ASCII art to the SDL window

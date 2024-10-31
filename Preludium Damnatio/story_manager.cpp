@@ -85,16 +85,27 @@ void StoryManager::DisplayCurrentNode() {
     // Define a color for the text
     SDL_Color textColor = { 255, 255, 255, 255 }; // White color
 
-    // Render the node's main text
-    renderManager.RenderTextToScreen(node.text, 10, 10, textColor); // Adjust x, y as needed
+    // Define the maximum width for the text rendering
+    const int maxWidth = 600;
+
+    // Render the node's main text with wrapping
+    renderManager.RenderTextToScreen(node.text, 10, 10, textColor, maxWidth); // Use the variable
+
+    // Variable to keep track of the current y position for rendering options
+    int optionYPosition = 50; // Start y position for the first option
 
     // Render each option with spacing, adjusting y-position for each line
     for (size_t i = 0; i < node.options.size(); ++i) {
         std::string optionText = std::to_string(i + 1) + ": " + node.options[i];
         std::cout << "Option " << i + 1 << ": " << optionText << std::endl; // Debugging output for each option
-        renderManager.RenderTextToScreen(optionText, 10, 50 + static_cast<int>(i * 30), textColor); // Adjust y for spacing
+
+        // Render the option text with wrapping
+        renderManager.RenderTextToScreen(optionText, 10, optionYPosition, textColor, maxWidth); // Use the variable
+        optionYPosition += 30; // Increase y position for the next option
     }
 }
+
+
 
 
 void StoryManager::HandleChoice(int choice) {

@@ -25,8 +25,8 @@ public:
     // Check if RenderManager is initialized
     bool IsInitialized() const;
 
-    // Render text to SDL window
-    void RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color = { 255, 255, 255, 255 });
+    // Render text to SDL window with optional width for wrapping
+    void RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color = { 255, 255, 255, 255 }, int maxWidth = 780);
 
     // Render ASCII art to the SDL window
     void RenderAsciiArtToScreen(const std::string& asciiArt, int startX, int startY, SDL_Color color = { 255, 255, 255, 255 });
