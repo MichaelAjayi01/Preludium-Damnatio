@@ -25,14 +25,13 @@ public:
         : text(text), options(options), nextNodes(nextNodes) {}
 };
 
-
 class StoryManager {
 public:
-    StoryManager(InputManager& inputManager);
+    // Updated constructor to accept RenderManager reference
+    StoryManager(InputManager& inputManager, RenderManager& renderManager);
     void LoadStory();
     void DisplayCurrentNode();
     void HandleChoice(int choice);
-    void SetRenderManager(RenderManager* renderManager);
 
     // Public methods for accessing story details
     const std::vector<std::string>& GetCurrentOptions() const;
@@ -48,7 +47,7 @@ private:
     int plotPointCounter;
     int encounterCounter;
     InputManager& inputManager;
-    RenderManager* renderManager; // Pointer to RenderManager
+    RenderManager& renderManager; // Changed to reference
 
     void HandleMainEncounter();
     void HandleRandomEncounter();

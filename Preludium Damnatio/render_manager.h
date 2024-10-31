@@ -22,6 +22,9 @@ public:
     // Load and set the font
     bool LoadFont(const std::string& fontPath, int fontSize);
 
+    // Check if RenderManager is initialized
+    bool IsInitialized() const;
+
     // Render text to SDL window
     void RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color = { 255, 255, 255, 255 });
 
@@ -34,6 +37,7 @@ public:
 private:
     SDL_Renderer* renderer; // Pointer to the SDL renderer
     TTF_Font* font; // Pointer to the loaded font
+    bool initialized; // Flag to check if RenderManager is initialized
 };
 
 #endif

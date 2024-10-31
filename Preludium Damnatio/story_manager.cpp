@@ -4,16 +4,15 @@
 #include <cstdlib>
 #include <ctime>
 
-StoryManager::StoryManager(InputManager& inputManager)
+StoryManager::StoryManager(InputManager& inputManager, RenderManager& renderManager)
     : currentNode("start"),
     plotPointCounter(0),
     encounterCounter(0),
     inputManager(inputManager),
-    renderManager(nullptr) // Initialize to nullptr
+    renderManager(renderManager) // Correctly assigned reference
 {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
-
 
 
 // Load the story structure
@@ -37,7 +36,6 @@ void StoryManager::LoadStory() {
         { {0, "battle"}, {1, "negotiation"}, {2, "escape"} }
     );
 
-
     storyNodes["random_encounter_1"] = StoryNode(
         "You encounter a group of wandering undead. They eye you hungrily.",
         { "Fight", "Run" },
@@ -50,31 +48,30 @@ void StoryManager::LoadStory() {
         { {0, "selection_menu"}, {1, "selection_menu"} }
     );
 
-	storyNodes["random_encounter_3"] = StoryNode(
-		"You stumble upon a hidden chamber filled with ancient artifacts. Will you take them?",
-		{ "Take the artifacts", "Leave them" },
-		{ {0, "selection_menu"}, {1, "selection_menu"} }
-	);
+    storyNodes["random_encounter_3"] = StoryNode(
+        "You stumble upon a hidden chamber filled with ancient artifacts. Will you take them?",
+        { "Take the artifacts", "Leave them" },
+        { {0, "selection_menu"}, {1, "selection_menu"} }
+    );
 
-	storyNodes["random_encounter_4"] = StoryNode(
-		"An undead knight raises his sword at you..",
-		{ "Fight", "Run" },
-		{ {0, "selection_menu"}, {1, "selection_menu"} }
-	);
+    storyNodes["random_encounter_4"] = StoryNode(
+        "An undead knight raises his sword at you.",
+        { "Fight", "Run" },
+        { {0, "selection_menu"}, {1, "selection_menu"} }
+    );
 
-	storyNodes["random_encounter_5"] = StoryNode(
-		"A Revenant stalks this room. Its accusatory glare meets yours...",
-		{ "Fight", "Run" },
-		{ {0, "selection_menu"}, {1, "selection_menu"} }
-	);
-
+    storyNodes["random_encounter_5"] = StoryNode(
+        "A Revenant stalks this room. Its accusatory glare meets yours...",
+        { "Fight", "Run" },
+        { {0, "selection_menu"}, {1, "selection_menu"} }
+    );
 
     // Add more random encounters...
     randomNodes.push_back("random_encounter_1");
     randomNodes.push_back("random_encounter_2");
-	randomNodes.push_back("random_encounter_3");
-	randomNodes.push_back("random_encounter_4");
-	randomNodes.push_back("random_encounter_5");
+    randomNodes.push_back("random_encounter_3");
+    randomNodes.push_back("random_encounter_4");
+    randomNodes.push_back("random_encounter_5");
 }
 
 void StoryManager::DisplayCurrentNode() {
@@ -84,13 +81,13 @@ void StoryManager::DisplayCurrentNode() {
     SDL_Color textColor = { 255, 255, 255, 255 }; // White color
 
     // Render the node text
-    if (renderManager) {
-        renderManager->RenderTextToScreen(node.text, 10, 10, textColor); // Adjust x, y as needed
-    }
+
+    renderManager.RenderTextToScreen(node.text, 10, 10, textColor); // Adjust x, y as needed
+
 
     // Render the options
     for (size_t i = 0; i < node.options.size(); ++i) {
-        renderManager->RenderTextToScreen(std::to_string(i + 1) + ": " + node.options[i], 10, 50 + static_cast<int>(i * 30), textColor); // Adjust y for spacing
+        renderManager.RenderTextToScreen(std::to_string(i + 1) + ": " + node.options[i], 10, 50 + static_cast<int>(i * 30), textColor); // Adjust y for spacing
     }
 }
 
@@ -164,11 +161,6 @@ void StoryManager::HandleMainEncounter() {
     }
 }
 
-
-void StoryManager::SetRenderManager(RenderManager* renderManager) {
-    this->renderManager = renderManager;
-}
-
 // Get current options
 const std::vector<std::string>& StoryManager::GetCurrentOptions() const {
     return storyNodes.at(currentNode).options;
@@ -202,8 +194,7 @@ void StoryManager::HandleRandomEncounter() {
     DisplayCurrentNode();
 }
 
-
 // Helper method to check if the next encounter should be a key plot point
 bool StoryManager::IsKeyPlotPoint() const {
-    return plotPointCounter % 3 == 0;
+    return plotPointCounter < 3; // Adjust logic based on your game requirements
 }

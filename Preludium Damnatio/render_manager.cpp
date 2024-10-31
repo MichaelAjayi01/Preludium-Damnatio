@@ -1,12 +1,10 @@
-// render_manager.cpp
-
 #include "render_manager.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 
 // Constructor
-RenderManager::RenderManager(SDL_Renderer* renderer) : renderer(renderer), font(nullptr) {
+RenderManager::RenderManager(SDL_Renderer* renderer) : renderer(renderer), font(nullptr), initialized(renderer != nullptr) {
     if (!renderer) {
         std::cerr << "Failed to initialize RenderManager: Invalid renderer." << std::endl;
     }
@@ -17,6 +15,11 @@ RenderManager::~RenderManager() {
     if (font) {
         TTF_CloseFont(font);
     }
+}
+
+// Check if RenderManager is initialized
+bool RenderManager::IsInitialized() const {
+    return initialized; // Return the initialization status
 }
 
 // Clear the screen
@@ -33,30 +36,44 @@ void RenderManager::Present() {
 // Load and set the font
 bool RenderManager::LoadFont(const std::string& fontPath, int fontSize) {
     font = TTF_OpenFont(fontPath.c_str(), fontSize);
-	if (font == nullptr) {
-		std::cerr << "Failed to load font at " << fontPath << ": " << TTF_GetError() << std::endl;
-	}
+    if (font == nullptr) {
+        std::cerr << "Failed to load font at " << fontPath << ": " << TTF_GetError() << std::endl;
+    }
     return font != nullptr;
 }
 
-// Render text to SDL window
 void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color) {
+    // Check if font is loaded
+    if (font == nullptr) {
+        std::cerr << "Font not loaded." << std::endl;
+        return; // Exit if font is not loaded
+    }
+
+    // Create a surface from the text
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), color);
     if (!textSurface) {
         std::cerr << "Failed to create text surface: " << TTF_GetError() << std::endl;
-        return;
+        return; // Exit if text surface creation fails
     }
 
+    // Create a texture from the surface
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, textSurface);
     SDL_FreeSurface(textSurface); // Free the surface after creating the texture
     if (!texture) {
         std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
-        return;
+        return; // Exit if texture creation fails
     }
 
-    SDL_Rect dstRect = { x, y, textSurface->w, textSurface->h }; // Destination rectangle for rendering
-    SDL_RenderCopy(renderer, texture, nullptr, &dstRect); // Render the texture
-    SDL_DestroyTexture(texture); // Clean up the texture
+    // Set up the destination rectangle for rendering the texture
+    SDL_Rect dstRect = { x, y, textSurface->w, textSurface->h };
+
+    // Render the texture to the screen
+    if (SDL_RenderCopy(renderer, texture, nullptr, &dstRect) < 0) {
+        std::cerr << "Failed to render texture: " << SDL_GetError() << std::endl;
+    }
+
+    // Clean up the texture
+    SDL_DestroyTexture(texture);
 }
 
 // Render ASCII art to the SDL window
@@ -83,7 +100,6 @@ void RenderManager::RenderAsciiArtToScreen(const std::string& asciiArt, int star
         }
     }
 }
-
 
 // Load and render an image
 void RenderManager::RenderImage(const std::string& filename, int x, int y, int width, int height) {
