@@ -19,7 +19,7 @@ StoryManager::StoryManager(InputManager& inputManager, RenderManager& renderMana
 void StoryManager::LoadStory() {
     // Key story nodes (fixed plot points)
     storyNodes["start"] = StoryNode(
-        "After many days and many encounters, you reach the Lich King's doors. The air hangs heavy with the smell of death, thick with the weight of ancient curses. The towering obsidian gates before you creak and groan, their dark surface etched with symbols of forbidden power, pulsing faintly with an eerie, green glow. The shadows around you twist and writhe, as if alive, whispering forgotten horrors.\n\nThe ground trembles beneath your feet, as though the land itself recoils in fear of what lies beyond. Every step closer drains warmth from your bones, and the chilling laughter of the Lich King echoes faintly from within. His throne room awaits... and with it, the final choice: face your damnation, or forsake your very soul for the power to overthrow him.\n\nThe time has come. Will you step through the threshold of death, or turn back and embrace the madness that brought you here?",
+        "\"Where...am I?\"",
         { "Proceed" },
         { {0, "selection_menu"} }
     );
