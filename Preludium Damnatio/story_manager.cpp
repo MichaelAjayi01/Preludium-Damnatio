@@ -21,16 +21,16 @@ void StoryManager::LoadStory() {
     storyNodes["start"] = StoryNode(
         "\"Where...am I?\"",
         { "Proceed" },
-        { {0, "selection_menu"} },
-        "assets/story node images/ascii art doors.bmp" // Specify the path to your image here
+        { {0, "selection_menu"} }
     );
-
 
     storyNodes["selection_menu"] = StoryNode(
         "You stand before three ancient doors, each carved with strange, foreboding symbols. To your left, a door of weathered stone, cracked and emanating the smell of damp earth. In the center, a door of gleaming gold, blinding in its brightness but humming with an unsettling energy. To your right, a door of twisted iron, blackened and seething with dark tendrils of smoke.",
         { "Enter the stone door", "Enter the golden door", "Enter the iron door" },
-        { {0, "stone_room"}, {1, "golden_room"}, {2, "iron_room"} }
+        { {0, "stone_room"}, {1, "golden_room"}, {2, "iron_room"} },
+        "assets/story node images/ascii art doors.bmp"
     );
+
 
     storyNodes["main_lich_king_encounter"] = StoryNode(
         "The Lich King stands before you, his skeletal gaze piercing into your soul. This is the moment of truth.",
@@ -102,8 +102,8 @@ void StoryManager::DisplayCurrentNode() {
     // Render the image if it exists
     if (!node.imageFile.empty()) {
         // Define the image size (adjust width and height as necessary)
-        int imageWidth = 200;
-        int imageHeight = 150;
+        int imageWidth = 600;
+        int imageHeight = 450;
 
         // Render the image
         renderManager.RenderImage(node.imageFile, 10, imageStartY, imageWidth, imageHeight);

@@ -39,7 +39,11 @@ int main(int argc, char* argv[]) {
     std::cout << "SDL_ttf initialized successfully." << std::endl;
 
     // Create SDL window and renderer
-    SDL_Window* window = SDL_CreateWindow("Preludium Damnatio", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Preludium Damnatio",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        800, 900,
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!window) {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         TTF_Quit();
@@ -106,8 +110,27 @@ int main(int argc, char* argv[]) {
     renderManager.Present();             // Present to ensure it's visible
     std::cout << "Story loaded successfully. Starting game loop." << std::endl;
 
+    // Set focus to the SDL window
+    SDL_RaiseWindow(window); // Brings the SDL window to the front
+    SDL_SetWindowFullscreen(window, 0); // Optionally remove fullscreen if previously set
+
     // Game loop
     while (true) {
+        SDL_Event e; // Create an SDL event variable
+
+        // Handle events
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                // Handle the quit event
+                SDL_DestroyRenderer(renderer);
+                SDL_DestroyWindow(window);
+                TTF_Quit();
+                SDL_Quit();
+                std::cout << "Cleaned up and exited." << std::endl;
+                return 0;
+            }
+        }
+
         renderManager.Clear();  // Clear screen at the start of each loop
 
         int choice = inputManager.GetPlayerChoice(storyManager.GetCurrentOptions().size());
@@ -130,10 +153,9 @@ int main(int argc, char* argv[]) {
 
         renderManager.Present(); // Present rendered content to the screen
         std::cout << "Presented content to the screen." << std::endl;
-
     }
 
-    // Clean up and quit
+    // Clean up and quit (this won't be reached due to the infinite loop)
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
