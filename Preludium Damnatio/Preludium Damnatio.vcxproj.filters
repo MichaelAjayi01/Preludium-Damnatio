@@ -19,6 +19,9 @@
     <Filter Include="Source Files\assets\fonts">
       <UniqueIdentifier>{aa737194-afc5-48a3-9135-4c9719c747af}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\assets\story node images">
+      <UniqueIdentifier>{ab6268e9-7e85-4239-93c6-419ea1513139}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Preludium Damnatio.cpp">
@@ -61,5 +64,10 @@
     <Font Include="BonaNovaSC-Bold.ttf">
       <Filter>Source Files\assets\fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\x64\Release\assets\story node images\ascii art doors.bmp">
+      <Filter>Source Files\assets\story node images</Filter>
+    </Image>
   </ItemGroup>
 </Project>

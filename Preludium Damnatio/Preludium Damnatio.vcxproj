@@ -150,6 +150,9 @@
     <Font Include="BonaNovaSC-Italic.ttf" />
     <Font Include="BonaNovaSC-Regular.ttf" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\x64\Release\assets\story node images\ascii art doors.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

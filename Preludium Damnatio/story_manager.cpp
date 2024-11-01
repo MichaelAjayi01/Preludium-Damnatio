@@ -21,8 +21,10 @@ void StoryManager::LoadStory() {
     storyNodes["start"] = StoryNode(
         "\"Where...am I?\"",
         { "Proceed" },
-        { {0, "selection_menu"} }
+        { {0, "selection_menu"} },
+        "assets/story node images/ascii art doors.bmp" // Specify the path to your image here
     );
+
 
     storyNodes["selection_menu"] = StoryNode(
         "You stand before three ancient doors, each carved with strange, foreboding symbols. To your left, a door of weathered stone, cracked and emanating the smell of damp earth. In the center, a door of gleaming gold, blinding in its brightness but humming with an unsettling energy. To your right, a door of twisted iron, blackened and seething with dark tendrils of smoke.",
@@ -94,8 +96,28 @@ void StoryManager::DisplayCurrentNode() {
     // Render the node's main text with wrapping and capture total height
     renderManager.RenderTextToScreen(node.text, 10, 10, textColor, maxWidth, &nodeTextHeight); // Use the variable
 
+    // Calculate the starting y-coordinate for the image
+    int imageStartY = 10 + nodeTextHeight + 20;
+
+    // Render the image if it exists
+    if (!node.imageFile.empty()) {
+        // Define the image size (adjust width and height as necessary)
+        int imageWidth = 200;
+        int imageHeight = 150;
+
+        // Render the image
+        renderManager.RenderImage(node.imageFile, 10, imageStartY, imageWidth, imageHeight);
+
+        // Update the y-coordinate for options based on the image height
+        imageStartY += imageHeight + 20; // Add extra spacing after the image
+    }
+    else {
+        // If there's no image, just adjust for spacing
+        imageStartY += 20; // Add spacing if no image is displayed
+    }
+
     // Calculate the starting y-coordinate for the options
-    int optionsStartY = 10 + nodeTextHeight + 20;
+    int optionsStartY = imageStartY;
 
     // Render each option with spacing, adjusting y-position for each line
     for (size_t i = 0; i < node.options.size(); ++i) {
@@ -103,13 +125,10 @@ void StoryManager::DisplayCurrentNode() {
         std::cout << "Option " << i + 1 << ": " << optionText << std::endl; // Debugging output for each option
 
         // Render the option text with wrapping
-        renderManager.RenderTextToScreen(optionText, 10, optionsStartY, textColor, maxWidth); // Use the variable
+        renderManager.RenderTextToScreen(optionText, 10, optionsStartY, textColor, maxWidth);
         optionsStartY += 30; // Increase y position for the next option
     }
 }
-
-
-
 
 
 void StoryManager::HandleChoice(int choice) {
