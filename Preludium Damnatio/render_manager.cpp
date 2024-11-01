@@ -127,22 +127,36 @@ void RenderManager::RenderAsciiArtToScreen(const std::string& asciiArt, int star
     }
 }
 
-// Load and render an image
+
 void RenderManager::RenderImage(const std::string& filename, int x, int y, int width, int height) {
-    SDL_Surface* surface = SDL_LoadBMP(filename.c_str()); // Load image as surface
+    std::cout << "Attempting to load image: " << filename << std::endl; // Debug statement
+
+    // Load image as surface
+    SDL_Surface* surface = SDL_LoadBMP(filename.c_str());
     if (!surface) {
         std::cerr << "Failed to load image: " << filename << " SDL_Error: " << SDL_GetError() << std::endl;
-        return;
+        return; // Early exit if the image fails to load
     }
 
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface); // Create texture from surface
+    // Create texture from surface
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface); // Free the surface after creating the texture
     if (!texture) {
         std::cerr << "Failed to create texture from surface: SDL_Error: " << SDL_GetError() << std::endl;
-        return;
+        return; // Early exit if texture creation fails
     }
 
+    // Debug output for rendering
+    std::cout << "Rendering image: " << filename
+        << " at position (" << x << ", " << y << ") "
+        << "with size (" << width << " x " << height << ")" << std::endl;
+
     SDL_Rect dstRect = { x, y, width, height }; // Destination rectangle for rendering
-    SDL_RenderCopy(renderer, texture, nullptr, &dstRect); // Render the texture
+    if (SDL_RenderCopy(renderer, texture, nullptr, &dstRect) != 0) {
+        std::cerr << "Failed to render texture: SDL_Error: " << SDL_GetError() << std::endl;
+    }
+
     SDL_DestroyTexture(texture); // Clean up the texture
 }
+
+

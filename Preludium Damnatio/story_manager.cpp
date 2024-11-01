@@ -6,16 +6,14 @@
 
 StoryManager::StoryManager(InputManager& inputManager, RenderManager& renderManager)
     : currentNode("start"),
-    plotPointCounter(0),
-    encounterCounter(0),
     inputManager(inputManager),
-    renderManager(renderManager) // Correctly assigned reference
+    renderManager(renderManager)
 {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
 
 
-// Load the story structure
+
 void StoryManager::LoadStory() {
     // Key story nodes (fixed plot points)
     storyNodes["start"] = StoryNode(
@@ -25,179 +23,179 @@ void StoryManager::LoadStory() {
     );
 
     storyNodes["selection_menu"] = StoryNode(
-        "You stand before three ancient doors, each carved with strange, foreboding symbols. To your left, a door of weathered stone, cracked and emanating the smell of damp earth. In the center, a door of gleaming gold, blinding in its brightness but humming with an unsettling energy. To your right, a door of twisted iron, blackened and seething with dark tendrils of smoke.",
+        "You stand before three ancient doors, each carved with strange, foreboding symbols...",
         { "Enter the stone door", "Enter the golden door", "Enter the iron door" },
         { {0, "stone_room"}, {1, "golden_room"}, {2, "iron_room"} },
         "assets/story node images/ascii art doors.bmp"
     );
 
-
-    storyNodes["main_lich_king_encounter"] = StoryNode(
-        "The Lich King stands before you, his skeletal gaze piercing into your soul. This is the moment of truth.",
-        { "Fight", "Negotiate", "Flee" },
-        { {0, "battle"}, {1, "negotiation"}, {2, "escape"} }
+    // Story nodes for different room selections
+    storyNodes["stone_room"] = StoryNode(
+        "The stone door creaks open, revealing a chamber lined with old tombs. An eerie silence envelops you. As you step in, you hear whispers echoing off the walls.",
+        { "Search for hidden treasures", "Leave the room" },
+        { {0, "find_treasure"}, {1, "selection_menu"} }
     );
 
-    storyNodes["random_encounter_1"] = StoryNode(
-        "You encounter a group of wandering undead. They eye you hungrily.",
-        { "Fight", "Run" },
-        { {0, "selection_menu"}, {1, "selection_menu"} }
+    storyNodes["golden_room"] = StoryNode(
+        "You enter a dazzling room filled with golden artifacts and shimmering jewels. But there’s a sense of danger that hangs in the air like a thick fog.",
+        { "Take a jewel", "Investigate the room", "Leave the room" },
+        { {0, "curse_jewel"}, {1, "golden_secrets"}, {2, "selection_menu"} }
     );
 
-    storyNodes["random_encounter_2"] = StoryNode(
-        "A strange figure offers you a deal. Will you accept the cursed power?",
-        { "Accept", "Reject" },
-        { {0, "selection_menu"}, {1, "selection_menu"} }
+    storyNodes["iron_room"] = StoryNode(
+        "A cold breeze greets you as you step into the iron room. A large iron gate stands at the end, slightly ajar, emitting an ominous glow.",
+        { "Push open the gate", "Examine the room for secrets", "Leave the room" },
+        { {0, "necromancer_lair"}, {1, "iron_secrets"}, {2, "selection_menu"} }
     );
 
-    storyNodes["random_encounter_3"] = StoryNode(
-        "You stumble upon a hidden chamber filled with ancient artifacts. Will you take them?",
-        { "Take the artifacts", "Leave them" },
-        { {0, "selection_menu"}, {1, "selection_menu"} }
+    // Treasure and secrets nodes
+    storyNodes["find_treasure"] = StoryNode(
+        "You uncover a hidden chest filled with ancient relics. One item stands out: a necromancer’s crown. As you approach, shadows swirl around the chest.",
+        { "Take the crown", "Leave it behind", "Inspect the shadows" },
+        { {0, "crown_choice"}, {1, "selection_menu"}, {2, "shadow_interaction"} }
     );
 
-    storyNodes["random_encounter_4"] = StoryNode(
-        "An undead knight raises his sword at you.",
-        { "Fight", "Run" },
-        { {0, "selection_menu"}, {1, "selection_menu"} }
+    storyNodes["shadow_interaction"] = StoryNode(
+        "You reach out to touch the swirling shadows. They pull you in, revealing a vision of the necromancer's past—his rise to power and subsequent fall.",
+        { "Embrace the vision", "Break free from it" },
+        { {0, "vision_choice"}, {1, "selection_menu"} }
     );
 
-    storyNodes["random_encounter_5"] = StoryNode(
-        "A Revenant stalks this room. Its accusatory glare meets yours...",
-        { "Fight", "Run" },
-        { {0, "selection_menu"}, {1, "selection_menu"} }
+    storyNodes["vision_choice"] = StoryNode(
+        "The vision overwhelms you, and you feel your consciousness merging with the necromancer's. You gain knowledge of dark spells.",
+        { "Use the spells", "Resist the knowledge" },
+        { {0, "corrupted"}, {1, "selection_menu"} }
     );
 
-    // Add more random encounters...
-    randomNodes.push_back("random_encounter_1");
-    randomNodes.push_back("random_encounter_2");
-    randomNodes.push_back("random_encounter_3");
-    randomNodes.push_back("random_encounter_4");
-    randomNodes.push_back("random_encounter_5");
+    storyNodes["golden_secrets"] = StoryNode(
+        "In the corner, you spot an ancient tome, its pages flickering with a strange light. It seems to call to you.",
+        { "Read the tome", "Take a jewel", "Leave the room" },
+        { {0, "tome_choice"}, {1, "curse_jewel"}, {2, "selection_menu"} }
+    );
+
+    storyNodes["tome_choice"] = StoryNode(
+        "As you read the tome, you learn about forbidden magic that can grant immense power. But with power comes a price.",
+        { "Accept the knowledge", "Close the book and leave" },
+        { {0, "corrupted"}, {1, "selection_menu"} }
+    );
+
+    storyNodes["curse_jewel"] = StoryNode(
+        "As you grasp the jewel, a dark energy envelops you. You feel your life force wane. A sinister voice whispers promises of power in exchange for your soul.",
+        { "Embrace the dark power", "Try to resist it", "Throw the jewel away" },
+        { {0, "necromancer_lair"}, {1, "selection_menu"}, {2, "selection_menu"} }
+    );
+
+    storyNodes["iron_secrets"] = StoryNode(
+        "You discover a hidden alcove containing scrolls of dark magic. One scroll hints at the necromancer’s fate, warning of the consequences of greed.",
+        { "Read the scroll", "Leave the scroll", "Burn the scroll" },
+        { {0, "necromancer_lair"}, {1, "selection_menu"}, {2, "selection_menu"} }
+    );
+
+    // Necromancer lair nodes
+    storyNodes["necromancer_lair"] = StoryNode(
+        "You step into the lair of the necromancer, surrounded by dark energy and remnants of his power. Shadows writhe in anticipation of your presence.",
+        { "Search for clues", "Examine the dark altar", "Leave the lair" },
+        { {0, "main_necromancer_lair"}, {1, "dark_altar"}, {2, "selection_menu"} }
+    );
+
+    storyNodes["main_necromancer_lair"] = StoryNode(
+        "You feel a presence watching you. A whisper fills the air, urging you to take the crown. The atmosphere thickens, making it hard to breathe.",
+        { "Take the crown", "Refuse the crown", "Call out to the presence" },
+        { {0, "crown_choice"}, {1, "grave_choice"}, {2, "whisper_choice"} }
+    );
+
+    storyNodes["whisper_choice"] = StoryNode(
+        "You call out, demanding to know who watches you. A shadowy figure appears, offering you a deal—a chance to become the next necromancer.",
+        { "Accept the offer", "Decline and fight" },
+        { {0, "corrupted"}, {1, "grave_choice"} }
+    );
+
+    storyNodes["dark_altar"] = StoryNode(
+        "The altar pulses with dark energy. You see the crown resting atop it, glowing ominously. The air feels charged with power, tempting you.",
+        { "Take the crown", "Leave it alone", "Perform a ritual" },
+        { {0, "crown_choice"}, {1, "selection_menu"}, {2, "dark_ritual"} }
+    );
+
+    storyNodes["dark_ritual"] = StoryNode(
+        "You decide to perform a dark ritual, channeling the energy from the altar. The air crackles as you summon shadows to aid you.",
+        { "Command the shadows", "Break the ritual" },
+        { {0, "corrupted"}, {1, "selection_menu"} }
+    );
+
+    // Crown choice nodes
+    storyNodes["crown_choice"] = StoryNode(
+        "You place the necromancer’s crown upon your head. A rush of dark power surges through you, reshaping your very essence.",
+        { "Embrace the corruption", "Resist the power", "Dismantle the crown" },
+        { {0, "corrupted"}, {1, "grave_choice"}, {2, "selection_menu"} }
+    );
+
+    storyNodes["grave_choice"] = StoryNode(
+        "You feel your life force slowly draining into the necromancer's grave, transferring your essence into his. Shadows beckon you deeper into the grave.",
+        { "Surrender to the drain", "Fight against it", "Seek a way out" },
+        { {0, "sacrificed"}, {1, "freed"}, {2, "selection_menu"} }
+    );
+
+    // End nodes
+    storyNodes["corrupted"] = StoryNode(
+        "Corruption seeps into your soul, and you become the new necromancer, bound to darkness forever. Your eyes glow with malevolence, and you lose your humanity.",
+        { "GAME OVER" },
+        {}
+    );
+
+    storyNodes["sacrificed"] = StoryNode(
+        "Your life force becomes one with the necromancer, granting him new power while you fade into oblivion. His laughter echoes in your mind as your essence is consumed.",
+        { "GAME OVER" },
+        {}
+    );
+
+    storyNodes["freed"] = StoryNode(
+        "You break free from the necromancer's influence, escaping with your life, but forever haunted by the dark choices you made. You emerge into the light, but darkness lingers at the edges of your mind.",
+        { "GAME OVER" },
+        {}
+    );
 }
 
-void StoryManager::DisplayCurrentNode() {
-    // Fetch the current node to display
-    const StoryNode& node = storyNodes[currentNode];
 
-    // Debugging output: print the current node ID and its text
+
+void StoryManager::DisplayCurrentNode() {
+    const StoryNode& node = storyNodes[currentNode];
     std::cout << "Displaying Current Node: " << currentNode << std::endl;
     std::cout << "Node Text: " << node.text << std::endl;
 
-    // Define a color for the text
     SDL_Color textColor = { 255, 255, 255, 255 }; // White color
-
-    // Define the maximum width for the text rendering
     const int maxWidth = 600;
-
-    // Variable to keep track of the total height of the main text
     int nodeTextHeight = 0;
 
-    // Render the node's main text with wrapping and capture total height
-    renderManager.RenderTextToScreen(node.text, 10, 10, textColor, maxWidth, &nodeTextHeight); // Use the variable
-
-    // Calculate the starting y-coordinate for the image
+    renderManager.RenderTextToScreen(node.text, 10, 10, textColor, maxWidth, &nodeTextHeight);
     int imageStartY = 10 + nodeTextHeight + 20;
 
-    // Render the image if it exists
     if (!node.imageFile.empty()) {
-        // Define the image size (adjust width and height as necessary)
-        int imageWidth = 600;
-        int imageHeight = 450;
-
-        // Render the image
+        int imageWidth = 750;
+        int imageHeight = 750;
         renderManager.RenderImage(node.imageFile, 10, imageStartY, imageWidth, imageHeight);
-
-        // Update the y-coordinate for options based on the image height
-        imageStartY += imageHeight + 20; // Add extra spacing after the image
+        imageStartY += imageHeight + 20;
     }
     else {
-        // If there's no image, just adjust for spacing
-        imageStartY += 20; // Add spacing if no image is displayed
+        imageStartY += 20;
     }
 
-    // Calculate the starting y-coordinate for the options
     int optionsStartY = imageStartY;
-
-    // Render each option with spacing, adjusting y-position for each line
     for (size_t i = 0; i < node.options.size(); ++i) {
         std::string optionText = std::to_string(i + 1) + ": " + node.options[i];
-        std::cout << "Option " << i + 1 << ": " << optionText << std::endl; // Debugging output for each option
-
-        // Render the option text with wrapping
+        std::cout << "Option " << i + 1 << ": " << optionText << std::endl;
         renderManager.RenderTextToScreen(optionText, 10, optionsStartY, textColor, maxWidth);
-        optionsStartY += 30; // Increase y position for the next option
+        optionsStartY += 30;
     }
 }
 
-
 void StoryManager::HandleChoice(int choice) {
-    // Validate choice
     if (choice < 1 || choice > storyNodes[currentNode].options.size()) {
         throw std::out_of_range("Choice out of range");
     }
 
-    bool isRandomEncounter = std::find(randomNodes.begin(), randomNodes.end(), currentNode) != randomNodes.end();
-
-    if (isRandomEncounter) {
-        // Increment encounter counter for random encounters
-        encounterCounter++;
-
-        // Move to the next node based on player's choice
-        currentNode = storyNodes[currentNode].nextNodes[choice - 1].second; // Change here
-
-        // Only display if it's not the third encounter
-        if (encounterCounter < 3) {
-            DisplayCurrentNode();
-            // renderManager->RenderTextToScreen("Encounter Counter: " + std::to_string(encounterCounter), 10, 200, textColor);
-        }
-
-        // Check if the player has had 3 encounters
-        if (encounterCounter >= 3) {
-            encounterCounter = 0; // Reset counter for next set of encounters
-            HandleMainEncounter(); // Move to a main encounter
-            return;
-        }
-    }
-    else if (IsKeyPlotPoint() && encounterCounter >= 3) {
-        // Handle key plot point after three encounters
-        currentNode = storyNodes[currentNode].nextNodes[choice - 1].second; // Change here
-        plotPointCounter++;
-        encounterCounter = 0; // Reset after transitioning to the main plot point
-    }
-    else {
-        // Initiate a new random encounter
-        HandleRandomEncounter();
-    }
-}
-
-void StoryManager::HandleMainEncounter() {
-    inputManager.ClearConsole();
-
-    // Create a vector to hold all main encounter nodes
-    std::vector<std::string> mainEncounters;
-
-    // Iterate over the storyNodes to find those with "main" in their names
-    for (const auto& pair : storyNodes) {
-        if (pair.first.find("main") == 0) {
-            mainEncounters.push_back(pair.first);
-        }
-    }
-
-    // Select a random main encounter from the available options
-    if (!mainEncounters.empty()) {
-        int randomIndex = std::rand() % mainEncounters.size();
-        currentNode = mainEncounters[randomIndex]; // Set currentNode to a random main encounter
-
-        // Now display the current node
-        DisplayCurrentNode();
-    }
-    else {
-        std::cout << "No main encounters available!" << std::endl;
-        // Fallback logic if no main encounters exist
-        currentNode = "selection_menu"; // Fallback to selection menu
-        DisplayCurrentNode();
-    }
+    // Move to the next node based on player's choice
+    currentNode = storyNodes[currentNode].nextNodes[choice - 1].second;
+    DisplayCurrentNode();
 }
 
 // Get current options
@@ -223,17 +221,4 @@ bool StoryManager::NeedsAsciiArt() const {
 // Check if the current node needs audio
 bool StoryManager::NeedsAudio() const {
     return !storyNodes.at(currentNode).audioFile.empty();
-}
-
-// Handle random encounter by selecting from the pool of random nodes
-void StoryManager::HandleRandomEncounter() {
-    int randomIndex = std::rand() % randomNodes.size();
-    currentNode = randomNodes[randomIndex];
-
-    DisplayCurrentNode();
-}
-
-// Helper method to check if the next encounter should be a key plot point
-bool StoryManager::IsKeyPlotPoint() const {
-    return plotPointCounter < 3; // Adjust logic based on your game requirements
 }

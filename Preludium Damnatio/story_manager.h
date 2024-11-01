@@ -45,14 +45,8 @@ private:
     std::map<std::string, StoryNode> storyNodes;
     std::vector<std::string> randomNodes;
     std::string currentNode;
-    int plotPointCounter;
-    int encounterCounter;
     InputManager& inputManager;
     RenderManager& renderManager; // Changed to reference
-
-    void HandleMainEncounter();
-    void HandleRandomEncounter();
-    bool IsKeyPlotPoint() const;
 };
 
 #endif // STORY_MANAGER_H // This should match the #ifndef directive
