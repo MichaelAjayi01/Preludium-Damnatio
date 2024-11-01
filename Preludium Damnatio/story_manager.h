@@ -41,6 +41,9 @@ public:
     bool NeedsAsciiArt() const;
     bool NeedsAudio() const;
 
+    // New method to check if the game is over
+    bool IsGameOver() const;
+
 private:
     std::map<std::string, StoryNode> storyNodes;
     std::vector<std::string> randomNodes;
@@ -49,4 +52,4 @@ private:
     RenderManager& renderManager; // Changed to reference
 };
 
-#endif // STORY_MANAGER_H // This should match the #ifndef directive
+#endif // STORY_MANAGER_H

@@ -23,6 +23,11 @@ bool RenderManager::IsInitialized() const {
     return initialized; // Return the initialization status
 }
 
+TTF_Font* RenderManager::GetFont() const {
+    return font; // Return the font member variable
+}
+
+
 // Clear the screen
 void RenderManager::Clear() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Set color to black
@@ -34,14 +39,15 @@ void RenderManager::Present() {
     SDL_RenderPresent(renderer); // Present the rendered content
 }
 
-// Load and set the font
 bool RenderManager::LoadFont(const std::string& fontPath, int fontSize) {
     font = TTF_OpenFont(fontPath.c_str(), fontSize);
     if (font == nullptr) {
         std::cerr << "Failed to load font at " << fontPath << ": " << TTF_GetError() << std::endl;
+        return false; // Return false if the font couldn't be loaded
     }
-    return font != nullptr;
+    return true; // Return true if the font loaded successfully
 }
+
 
 
 void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color, int maxWidth, int* totalHeight) {

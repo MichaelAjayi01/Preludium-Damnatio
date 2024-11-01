@@ -22,6 +22,8 @@ public:
     // Load and set the font
     bool LoadFont(const std::string& fontPath, int fontSize);
 
+    TTF_Font* GetFont() const;
+
     // Check if RenderManager is initialized
     bool IsInitialized() const;
 

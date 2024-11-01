@@ -11,6 +11,29 @@
 
 #define SDL_MAIN_HANDLED
 
+// Declare the Cleanup function
+void Cleanup(SDL_Renderer* renderer, SDL_Window* window, TTF_Font* font) {
+    // Close font if it was created
+    if (font) {
+        TTF_CloseFont(font);
+        font = nullptr; // This line won't affect the class member 'font', but it's fine here.
+    }
+
+    // Destroy renderer and window
+    if (renderer) {
+        SDL_DestroyRenderer(renderer);
+        renderer = nullptr;
+    }
+    if (window) {
+        SDL_DestroyWindow(window);
+        window = nullptr;
+    }
+
+    TTF_Quit();
+    SDL_Quit();
+}
+
+
 int main(int argc, char* argv[]) {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -70,10 +93,7 @@ int main(int argc, char* argv[]) {
 
     if (!renderManager.IsInitialized()) {
         std::cerr << "RenderManager failed to initialize." << std::endl;
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        TTF_Quit();
-        SDL_Quit();
+        Cleanup(renderer, window, renderManager.GetFont());
         return -1;
     }
     else {
@@ -96,10 +116,7 @@ int main(int argc, char* argv[]) {
 
     if (!renderManager.LoadFont(fontPath.c_str(), 18)) {
         std::cerr << "Failed to load font." << std::endl;
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        TTF_Quit();
-        SDL_Quit();
+        Cleanup(renderer, window, renderManager.GetFont());
         return -1;
     }
     std::cout << "Font loaded successfully." << std::endl;
@@ -114,7 +131,6 @@ int main(int argc, char* argv[]) {
     SDL_RaiseWindow(window); // Brings the SDL window to the front
     SDL_SetWindowFullscreen(window, 0); // Optionally remove fullscreen if previously set
 
-    // Game loop
     while (true) {
         SDL_Event e; // Create an SDL event variable
 
@@ -122,10 +138,7 @@ int main(int argc, char* argv[]) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 // Handle the quit event
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                TTF_Quit();
-                SDL_Quit();
+                Cleanup(renderer, window, renderManager.GetFont());
                 std::cout << "Cleaned up and exited." << std::endl;
                 return 0;
             }
@@ -133,8 +146,16 @@ int main(int argc, char* argv[]) {
 
         renderManager.Clear();  // Clear screen at the start of each loop
 
+        // Get player choice based on current options
         int choice = inputManager.GetPlayerChoice(storyManager.GetCurrentOptions().size());
         storyManager.HandleChoice(choice);
+
+        // Check if the current node is empty or a game-ending node
+        if (storyManager.IsGameOver()) {  // Assume `IsGameOver()` is a method in StoryManager
+            std::cout << "Game over. Cleaning up resources..." << std::endl;
+            Cleanup(renderer, window, renderManager.GetFont());
+            break;  // Exit the game loop if it's game over
+        }
 
         // Display the current node based on the choice made
         storyManager.DisplayCurrentNode();
@@ -155,12 +176,8 @@ int main(int argc, char* argv[]) {
         std::cout << "Presented content to the screen." << std::endl;
     }
 
-    // Clean up and quit (this won't be reached due to the infinite loop)
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    TTF_Quit();
-    SDL_Quit();
+    // Clean up and quit after breaking the loop
+    Cleanup(renderer, window, renderManager.GetFont());
     std::cout << "Cleaned up and exited." << std::endl;
-
     return 0;
 }

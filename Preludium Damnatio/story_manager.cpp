@@ -152,27 +152,27 @@ void StoryManager::LoadStory() {
 		"assets/story node images/necromancer grave.bmp"
     );
 
-    // End nodes
     storyNodes["corrupted"] = StoryNode(
         "Corruption seeps into your soul, and you become the new necromancer, bound to darkness forever. Your eyes glow with malevolence, and you lose your humanity.",
         { "GAME OVER" },
-        {},
-		"assets/story node images/corrupted soul.bmp"
+        { { 1, "end_game" } }, 
+        "assets/story node images/corrupted soul.bmp"
     );
 
     storyNodes["sacrificed"] = StoryNode(
         "Your life force becomes one with the necromancer, granting him new power while you fade into oblivion. His laughter echoes in your mind as your essence is consumed.",
         { "GAME OVER" },
-        {},
-		"assets/story node images/sacrificed soul.bmp"
+        { { 1, "end_game" } }, 
+        "assets/story node images/sacrificed soul.bmp"
     );
 
     storyNodes["freed"] = StoryNode(
         "You break free from the necromancer's influence, escaping with your life, but forever haunted by the dark choices you made. You emerge into the light, but darkness lingers at the edges of your mind.",
         { "GAME OVER" },
-        {},
-		"assets/story node images/freed soul.bmp"
+        { { 1, "end_game" } },
+        "assets/story node images/freed soul.bmp"
     );
+
 }
 
 
@@ -209,14 +209,50 @@ void StoryManager::DisplayCurrentNode() {
 }
 
 void StoryManager::HandleChoice(int choice) {
+    // Check if the current node is "end_game" before validating the choice
+    if (currentNode == "end_game") {
+        std::cout << "Game over. Exiting game loop." << std::endl;
+        return; // Exit if the game is over
+    }
+
+    // Ensure the currentNode is valid before accessing options
+    if (storyNodes.find(currentNode) == storyNodes.end()) {
+        std::cerr << "Current node is invalid." << std::endl;
+        return; // Early exit if the node is invalid
+    }
+
     if (choice < 1 || choice > storyNodes[currentNode].options.size()) {
         throw std::out_of_range("Choice out of range");
     }
 
     // Move to the next node based on player's choice
     currentNode = storyNodes[currentNode].nextNodes[choice - 1].second;
+
+    // Check if the new currentNode is "end_game"
+    if (IsGameOver()) {
+        std::cout << "Game over. Exiting game loop." << std::endl;
+        return; // Exit the method
+    }
+
     DisplayCurrentNode();
 }
+
+
+
+
+bool StoryManager::IsGameOver() const {
+    // Ensure that currentNode is valid before checking
+    if (storyNodes.find(currentNode) == storyNodes.end()) {
+        std::cerr << "Current node is invalid during game over check." << std::endl;
+        return true; // Treat as game over if the node is invalid
+    }
+
+    const StoryNode& node = storyNodes.at(currentNode);
+    return (currentNode == "end_game") || node.nextNodes.empty();
+}
+
+
+
 
 // Get current options
 const std::vector<std::string>& StoryManager::GetCurrentOptions() const {
