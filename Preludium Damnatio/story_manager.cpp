@@ -88,11 +88,14 @@ void StoryManager::DisplayCurrentNode() {
     // Define the maximum width for the text rendering
     const int maxWidth = 600;
 
-    // Render the node's main text with wrapping
-    renderManager.RenderTextToScreen(node.text, 10, 10, textColor, maxWidth); // Use the variable
+    // Variable to keep track of the total height of the main text
+    int nodeTextHeight = 0;
 
-    // Variable to keep track of the current y position for rendering options
-    int optionYPosition = 50; // Start y position for the first option
+    // Render the node's main text with wrapping and capture total height
+    renderManager.RenderTextToScreen(node.text, 10, 10, textColor, maxWidth, &nodeTextHeight); // Use the variable
+
+    // Calculate the starting y-coordinate for the options
+    int optionsStartY = 10 + nodeTextHeight + 20;
 
     // Render each option with spacing, adjusting y-position for each line
     for (size_t i = 0; i < node.options.size(); ++i) {
@@ -100,10 +103,11 @@ void StoryManager::DisplayCurrentNode() {
         std::cout << "Option " << i + 1 << ": " << optionText << std::endl; // Debugging output for each option
 
         // Render the option text with wrapping
-        renderManager.RenderTextToScreen(optionText, 10, optionYPosition, textColor, maxWidth); // Use the variable
-        optionYPosition += 30; // Increase y position for the next option
+        renderManager.RenderTextToScreen(optionText, 10, optionsStartY, textColor, maxWidth); // Use the variable
+        optionsStartY += 30; // Increase y position for the next option
     }
 }
+
 
 
 

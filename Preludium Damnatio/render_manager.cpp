@@ -43,10 +43,8 @@ bool RenderManager::LoadFont(const std::string& fontPath, int fontSize) {
     return font != nullptr;
 }
 
-#include <sstream> // Include for std::istringstream
 
-void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color, int maxWidth) {
-    // Check if font is loaded
+void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color, int maxWidth, int* totalHeight) {
     if (font == nullptr) {
         std::cerr << "Font not loaded." << std::endl;
         return; // Exit if font is not loaded
@@ -55,38 +53,50 @@ void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SD
     std::istringstream iss(text);
     std::string word;
     std::string line;
+    int initialY = y;
+    int lineHeight = TTF_FontHeight(font);
 
     while (iss >> word) {
-        // Create a surface for the current line
-        SDL_Surface* lineSurface = TTF_RenderText_Solid(font, (line + word + " ").c_str(), color);
+        // Check if adding the word would exceed maxWidth
+        std::string newLine = line.empty() ? word : line + " " + word;
+        int newLineWidth;
+        TTF_SizeText(font, newLine.c_str(), &newLineWidth, nullptr);
 
-        // Check if the line width exceeds maxWidth
-        if (lineSurface && lineSurface->w > maxWidth) {
-            // Render the current line
-            SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, lineSurface);
-            SDL_FreeSurface(lineSurface); // Free the surface after creating the texture
-            SDL_Rect dstRect = { x, y, lineSurface->w, lineSurface->h };
-            SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
-            SDL_DestroyTexture(texture);
+        if (newLineWidth > maxWidth && !line.empty()) {
+            // Render current line as texture if it would exceed maxWidth
+            SDL_Surface* lineSurface = TTF_RenderText_Solid(font, line.c_str(), color);
+            if (lineSurface) {
+                SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, lineSurface);
+                SDL_Rect dstRect = { x, y, lineSurface->w, lineSurface->h };
+                SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+                SDL_DestroyTexture(texture);
+                SDL_FreeSurface(lineSurface);
+            }
 
-            // Move down for the next line
-            y += lineSurface->h;
-            line.clear(); // Clear the current line for the next line
+            y += lineHeight; // Move down to start a new line
+            line = word; // Start a new line with the current word
         }
-
-        line += word + " "; // Add the word to the current line
+        else {
+            line = newLine; // Append word to the current line
+        }
     }
 
-    // Render any remaining text in the line
+    // Render any remaining text in the line buffer
     if (!line.empty()) {
         SDL_Surface* lineSurface = TTF_RenderText_Solid(font, line.c_str(), color);
         if (lineSurface) {
             SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, lineSurface);
-            SDL_FreeSurface(lineSurface);
             SDL_Rect dstRect = { x, y, lineSurface->w, lineSurface->h };
             SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
             SDL_DestroyTexture(texture);
+            SDL_FreeSurface(lineSurface);
         }
+        y += lineHeight; // Account for the last rendered line
+    }
+
+    // Set total height if a pointer is passed
+    if (totalHeight) {
+        *totalHeight = y - initialY; // Calculate the height of all rendered text
     }
 }
 
