@@ -16,13 +16,14 @@ public:
     std::vector<std::pair<int, std::string>> nextNodes;
     std::string asciiArt;
     std::string audioFile;
+    std::string imageFile; // New member for image file
 
     // Default constructor
     StoryNode() = default;
 
     // Custom constructor
-    StoryNode(const std::string& text, const std::vector<std::string>& options, const std::vector<std::pair<int, std::string>>& nextNodes)
-        : text(text), options(options), nextNodes(nextNodes) {}
+    StoryNode(const std::string& text, const std::vector<std::string>& options, const std::vector<std::pair<int, std::string>>& nextNodes, const std::string& imageFile = "")
+        : text(text), options(options), nextNodes(nextNodes), imageFile(imageFile) {}
 };
 
 class StoryManager {
