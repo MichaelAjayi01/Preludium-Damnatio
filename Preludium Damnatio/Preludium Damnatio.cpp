@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* window = SDL_CreateWindow("Preludium Damnatio",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        800, 1000,
+        1300, 1000,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!window) {
         std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;

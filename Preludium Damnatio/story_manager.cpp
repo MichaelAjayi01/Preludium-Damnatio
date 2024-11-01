@@ -33,19 +33,22 @@ void StoryManager::LoadStory() {
     storyNodes["stone_room"] = StoryNode(
         "The stone door creaks open, revealing a chamber lined with old tombs. An eerie silence envelops you. As you step in, you hear whispers echoing off the walls.",
         { "Search for hidden treasures", "Leave the room" },
-        { {0, "find_treasure"}, {1, "selection_menu"} }
+		{ {0, "find_treasure"}, {1, "selection_menu"} }, 
+        "assets/story node images/dungeon room.bmp"
     );
 
     storyNodes["golden_room"] = StoryNode(
         "You enter a dazzling room filled with golden artifacts and shimmering jewels. But there’s a sense of danger that hangs in the air like a thick fog.",
         { "Take a jewel", "Investigate the room", "Leave the room" },
-        { {0, "curse_jewel"}, {1, "golden_secrets"}, {2, "selection_menu"} }
+        { {0, "curse_jewel"}, {1, "golden_secrets"}, {2, "selection_menu"} },
+		"assets/story node images/golden room.bmp"
     );
 
     storyNodes["iron_room"] = StoryNode(
         "A cold breeze greets you as you step into the iron room. A large iron gate stands at the end, slightly ajar, emitting an ominous glow.",
         { "Push open the gate", "Examine the room for secrets", "Leave the room" },
-        { {0, "necromancer_lair"}, {1, "iron_secrets"}, {2, "selection_menu"} }
+        { {0, "necromancer_lair"}, {1, "iron_secrets"}, {2, "selection_menu"} },
+		"assets/story node images/iron room.bmp"
     );
 
     // Treasure and secrets nodes
@@ -170,8 +173,8 @@ void StoryManager::DisplayCurrentNode() {
     int imageStartY = 10 + nodeTextHeight + 20;
 
     if (!node.imageFile.empty()) {
-        int imageWidth = 750;
-        int imageHeight = 750;
+        int imageWidth = 1200;
+        int imageHeight = 800;
         renderManager.RenderImage(node.imageFile, 10, imageStartY, imageWidth, imageHeight);
         imageStartY += imageHeight + 20;
     }
