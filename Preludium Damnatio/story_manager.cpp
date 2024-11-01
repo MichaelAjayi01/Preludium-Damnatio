@@ -179,8 +179,6 @@ void StoryManager::LoadStory() {
 
 void StoryManager::DisplayCurrentNode() {
     const StoryNode& node = storyNodes[currentNode];
-    std::cout << "Displaying Current Node: " << currentNode << std::endl;
-    std::cout << "Node Text: " << node.text << std::endl;
 
     SDL_Color textColor = { 255, 255, 255, 255 }; // White color
     const int maxWidth = 600;
@@ -202,7 +200,6 @@ void StoryManager::DisplayCurrentNode() {
     int optionsStartY = imageStartY;
     for (size_t i = 0; i < node.options.size(); ++i) {
         std::string optionText = std::to_string(i + 1) + ": " + node.options[i];
-        std::cout << "Option " << i + 1 << ": " << optionText << std::endl;
         renderManager.RenderTextToScreen(optionText, 10, optionsStartY, textColor, maxWidth);
         optionsStartY += 30;
     }
@@ -211,13 +208,11 @@ void StoryManager::DisplayCurrentNode() {
 void StoryManager::HandleChoice(int choice) {
     // Check if the current node is "end_game" before validating the choice
     if (currentNode == "end_game") {
-        std::cout << "Game over. Exiting game loop." << std::endl;
         return; // Exit if the game is over
     }
 
     // Ensure the currentNode is valid before accessing options
     if (storyNodes.find(currentNode) == storyNodes.end()) {
-        std::cerr << "Current node is invalid." << std::endl;
         return; // Early exit if the node is invalid
     }
 
@@ -230,7 +225,6 @@ void StoryManager::HandleChoice(int choice) {
 
     // Check if the new currentNode is "end_game"
     if (IsGameOver()) {
-        std::cout << "Game over. Exiting game loop." << std::endl;
         return; // Exit the method
     }
 

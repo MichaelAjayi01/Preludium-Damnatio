@@ -1,10 +1,9 @@
-// audio_manager.h
-
 #ifndef AUDIO_MANAGER_H
 #define AUDIO_MANAGER_H
 
 #include <string>
 #include <SDL.h>
+#include <thread>
 
 class AudioManager {
 public:
@@ -17,8 +16,11 @@ public:
     // Load audio file
     bool LoadAudio(const std::string& filename);
 
-    // Play loaded audio
-    void PlayAudio(const std::string& filename);  // Updated to accept a filename parameter
+    // Play loaded audio once
+    void PlayAudio(const std::string& filename);
+
+    // Play audio in a loop
+    void PlayAudioLoop(const std::string& filename);
 
     // Play sound effect
     void PlaySoundEffect(const std::string& filename);

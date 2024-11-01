@@ -37,29 +37,23 @@ void Cleanup(SDL_Renderer* renderer, SDL_Window* window, TTF_Font* font) {
 int main(int argc, char* argv[]) {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
         return -1;
     }
-    std::cout << "SDL initialized successfully." << std::endl;
 
     // Get and print the current working directory
     char cwd[1024];
     if (_getcwd(cwd, sizeof(cwd)) != NULL) {
-        std::cout << "Current working directory: " << cwd << std::endl;
     }
     else {
-        std::cerr << "Error getting current working directory." << std::endl;
         SDL_Quit();
         return -1;
     }
 
     // Initialize SDL_ttf
     if (TTF_Init() == -1) {
-        std::cerr << "SDL_ttf could not initialize! TTF_Error: " << TTF_GetError() << std::endl;
         SDL_Quit();
         return -1;
     }
-    std::cout << "SDL_ttf initialized successfully." << std::endl;
 
     // Create SDL window and renderer
     SDL_Window* window = SDL_CreateWindow("Preludium Damnatio",
@@ -68,22 +62,18 @@ int main(int argc, char* argv[]) {
         1300, 1000,
         SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (!window) {
-        std::cerr << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         TTF_Quit();
         SDL_Quit();
         return -1;
     }
-    std::cout << "Window created successfully." << std::endl;
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
-        std::cerr << "Renderer could not be created! SDL_Error: " << SDL_GetError() << std::endl;
         SDL_DestroyWindow(window);
         TTF_Quit();
         SDL_Quit();
         return -1;
     }
-    std::cout << "Renderer created successfully." << std::endl;
 
     // Initialize managers
     InputManager inputManager;
@@ -92,12 +82,8 @@ int main(int argc, char* argv[]) {
     AudioManager audioManager;
 
     if (!renderManager.IsInitialized()) {
-        std::cerr << "RenderManager failed to initialize." << std::endl;
         Cleanup(renderer, window, renderManager.GetFont());
         return -1;
-    }
-    else {
-        std::cout << "RenderManager initialized with a valid renderer." << std::endl;
     }
 
     // Load the story
@@ -105,31 +91,29 @@ int main(int argc, char* argv[]) {
 
     // Construct the path to the font file
     std::string fontPath = std::string(cwd) + "\\assets\\fonts\\BonaNovaSC-Regular.ttf";
-    std::cout << "Attempting to load font from: " << fontPath << std::endl;
 
     // Check if the font file can be opened
     FILE* file;
     if (fopen_s(&file, fontPath.c_str(), "r") == 0) {
-        std::cout << "Font file is accessible." << std::endl;
         fclose(file);
     }
 
     if (!renderManager.LoadFont(fontPath.c_str(), 18)) {
-        std::cerr << "Failed to load font." << std::endl;
         Cleanup(renderer, window, renderManager.GetFont());
         return -1;
     }
-    std::cout << "Font loaded successfully." << std::endl;
 
     // Display the initial story node once after loading the story
     renderManager.Clear();              // Clear screen for fresh render
     storyManager.DisplayCurrentNode();   // Display the first story node
     renderManager.Present();             // Present to ensure it's visible
-    std::cout << "Story loaded successfully. Starting game loop." << std::endl;
 
     // Set focus to the SDL window
     SDL_RaiseWindow(window); // Brings the SDL window to the front
     SDL_SetWindowFullscreen(window, 0); // Optionally remove fullscreen if previously set
+
+    std::string soundtrackPath = "assets\\audio\\Combat in the Ruins.wav";
+    audioManager.PlayAudioLoop(soundtrackPath);
 
     while (true) {
         SDL_Event e; // Create an SDL event variable
@@ -152,7 +136,6 @@ int main(int argc, char* argv[]) {
 
         // Check if the current node is empty or a game-ending node
         if (storyManager.IsGameOver()) {  // Assume `IsGameOver()` is a method in StoryManager
-            std::cout << "Game over. Cleaning up resources..." << std::endl;
             Cleanup(renderer, window, renderManager.GetFont());
             break;  // Exit the game loop if it's game over
         }
@@ -172,6 +155,5 @@ int main(int argc, char* argv[]) {
 
     // Clean up and quit after breaking the loop
     Cleanup(renderer, window, renderManager.GetFont());
-    std::cout << "Cleaned up and exited." << std::endl;
     return 0;
 }

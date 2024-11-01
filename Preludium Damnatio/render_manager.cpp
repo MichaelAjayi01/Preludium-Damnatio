@@ -42,7 +42,6 @@ void RenderManager::Present() {
 bool RenderManager::LoadFont(const std::string& fontPath, int fontSize) {
     font = TTF_OpenFont(fontPath.c_str(), fontSize);
     if (font == nullptr) {
-        std::cerr << "Failed to load font at " << fontPath << ": " << TTF_GetError() << std::endl;
         return false; // Return false if the font couldn't be loaded
     }
     return true; // Return true if the font loaded successfully
@@ -52,7 +51,6 @@ bool RenderManager::LoadFont(const std::string& fontPath, int fontSize) {
 
 void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SDL_Color color, int maxWidth, int* totalHeight) {
     if (font == nullptr) {
-        std::cerr << "Font not loaded." << std::endl;
         return; // Exit if font is not loaded
     }
 
@@ -108,12 +106,10 @@ void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SD
 
 
 void RenderManager::RenderImage(const std::string& filename, int x, int y, int width, int height) {
-    std::cout << "Attempting to load image: " << filename << std::endl; // Debug statement
 
     // Load image as surface
     SDL_Surface* surface = SDL_LoadBMP(filename.c_str());
     if (!surface) {
-        std::cerr << "Failed to load image: " << filename << " SDL_Error: " << SDL_GetError() << std::endl;
         return; // Early exit if the image fails to load
     }
 
@@ -121,18 +117,11 @@ void RenderManager::RenderImage(const std::string& filename, int x, int y, int w
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface); // Free the surface after creating the texture
     if (!texture) {
-        std::cerr << "Failed to create texture from surface: SDL_Error: " << SDL_GetError() << std::endl;
         return; // Early exit if texture creation fails
     }
 
-    // Debug output for rendering
-    std::cout << "Rendering image: " << filename
-        << " at position (" << x << ", " << y << ") "
-        << "with size (" << width << " x " << height << ")" << std::endl;
-
     SDL_Rect dstRect = { x, y, width, height }; // Destination rectangle for rendering
     if (SDL_RenderCopy(renderer, texture, nullptr, &dstRect) != 0) {
-        std::cerr << "Failed to render texture: SDL_Error: " << SDL_GetError() << std::endl;
     }
 
     SDL_DestroyTexture(texture); // Clean up the texture
