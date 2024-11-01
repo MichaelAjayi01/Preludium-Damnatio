@@ -160,12 +160,6 @@ int main(int argc, char* argv[]) {
         // Display the current node based on the choice made
         storyManager.DisplayCurrentNode();
 
-        // Render ASCII art if needed
-        if (storyManager.NeedsAsciiArt()) {
-            renderManager.RenderAsciiArtToScreen(storyManager.GetCurrentAsciiArt(), 100, 100);
-            std::cout << "Rendered ASCII art to screen." << std::endl;
-        }
-
         // Play audio if needed
         if (storyManager.NeedsAudio()) {
             audioManager.PlayAudio(storyManager.GetCurrentAudio());

@@ -107,33 +107,6 @@ void RenderManager::RenderTextToScreen(const std::string& text, int x, int y, SD
 }
 
 
-
-// Render ASCII art to the SDL window
-void RenderManager::RenderAsciiArtToScreen(const std::string& asciiArt, int startX, int startY, SDL_Color color) {
-    int x = startX;
-    int y = startY;
-
-    for (char c : asciiArt) {
-        if (c == '\n') {
-            // Move to the next line
-            x = startX;
-            y += TTF_FontHeight(font); // Move down by one character height
-        }
-        else {
-            // Render each character as a texture
-            std::string character(1, c); // Create a string from the character
-            RenderTextToScreen(character, x, y, color);
-
-            // Get the width of the rendered character
-            int charWidth;
-            TTF_SizeText(font, character.c_str(), &charWidth, nullptr); // Get character width
-
-            x += charWidth; // Move right by the width of the character
-        }
-    }
-}
-
-
 void RenderManager::RenderImage(const std::string& filename, int x, int y, int width, int height) {
     std::cout << "Attempting to load image: " << filename << std::endl; // Debug statement
 
