@@ -55,106 +55,123 @@ void StoryManager::LoadStory() {
     storyNodes["find_treasure"] = StoryNode(
         "You uncover a hidden chest filled with ancient relics. One item stands out: a necromancer’s crown. As you approach, shadows swirl around the chest.",
         { "Take the crown", "Leave it behind", "Inspect the shadows" },
-        { {0, "crown_choice"}, {1, "selection_menu"}, {2, "shadow_interaction"} }
+        { {0, "crown_choice"}, {1, "selection_menu"}, {2, "shadow_interaction"} },
+		"assets/story node images/treasure chest.bmp"
     );
 
     storyNodes["shadow_interaction"] = StoryNode(
         "You reach out to touch the swirling shadows. They pull you in, revealing a vision of the necromancer's past—his rise to power and subsequent fall.",
         { "Embrace the vision", "Break free from it" },
-        { {0, "vision_choice"}, {1, "selection_menu"} }
+        { {0, "vision_choice"}, {1, "selection_menu"} },
+		"assets/story node images/shadow vision.bmp"
     );
 
     storyNodes["vision_choice"] = StoryNode(
         "The vision overwhelms you, and you feel your consciousness merging with the necromancer's. You gain knowledge of dark spells.",
         { "Use the spells", "Resist the knowledge" },
-        { {0, "corrupted"}, {1, "selection_menu"} }
+        { {0, "corrupted"}, {1, "selection_menu"} },
+		"assets/story node images/dark spells.bmp"
     );
 
     storyNodes["golden_secrets"] = StoryNode(
         "In the corner, you spot an ancient tome, its pages flickering with a strange light. It seems to call to you.",
         { "Read the tome", "Take a jewel", "Leave the room" },
-        { {0, "tome_choice"}, {1, "curse_jewel"}, {2, "selection_menu"} }
+        { {0, "tome_choice"}, {1, "curse_jewel"}, {2, "selection_menu"} },
+		"assets/story node images/golden tome.bmp"
     );
 
     storyNodes["tome_choice"] = StoryNode(
         "As you read the tome, you learn about forbidden magic that can grant immense power. But with power comes a price.",
         { "Accept the knowledge", "Close the book and leave" },
-        { {0, "corrupted"}, {1, "selection_menu"} }
+        { {0, "corrupted"}, {1, "selection_menu"} }, 
+		"assets/story node images/forbidden magic.bmp"
     );
 
     storyNodes["curse_jewel"] = StoryNode(
         "As you grasp the jewel, a dark energy envelops you. You feel your life force wane. A sinister voice whispers promises of power in exchange for your soul.",
         { "Embrace the dark power", "Try to resist it", "Throw the jewel away" },
-        { {0, "necromancer_lair"}, {1, "selection_menu"}, {2, "selection_menu"} }
+        { {0, "necromancer_lair"}, {1, "selection_menu"}, {2, "selection_menu"} },
+		"assets/story node images/cursed jewel.bmp"
     );
 
     storyNodes["iron_secrets"] = StoryNode(
         "You discover a hidden alcove containing scrolls of dark magic. One scroll hints at the necromancer’s fate, warning of the consequences of greed.",
         { "Read the scroll", "Leave the scroll", "Burn the scroll" },
-        { {0, "necromancer_lair"}, {1, "selection_menu"}, {2, "selection_menu"} }
+        { {0, "necromancer_lair"}, {1, "selection_menu"}, {2, "selection_menu"} },
+		"assets/story node images/dark scrolls.bmp"
     );
 
     // Necromancer lair nodes
     storyNodes["necromancer_lair"] = StoryNode(
         "You step into the lair of the necromancer, surrounded by dark energy and remnants of his power. Shadows writhe in anticipation of your presence.",
         { "Search for clues", "Examine the dark altar", "Leave the lair" },
-        { {0, "main_necromancer_lair"}, {1, "dark_altar"}, {2, "selection_menu"} }
+        { {0, "main_necromancer_lair"}, {1, "dark_altar"}, {2, "selection_menu"} },
+		"assets/story node images/necromancer lair.bmp"
     );
 
     storyNodes["main_necromancer_lair"] = StoryNode(
         "You feel a presence watching you. A whisper fills the air, urging you to take the crown. The atmosphere thickens, making it hard to breathe.",
         { "Take the crown", "Refuse the crown", "Call out to the presence" },
-        { {0, "crown_choice"}, {1, "grave_choice"}, {2, "whisper_choice"} }
+        { {0, "crown_choice"}, {1, "grave_choice"}, {2, "whisper_choice"} },
+		"assets/story node images/necromancer presence.bmp"
     );
 
     storyNodes["whisper_choice"] = StoryNode(
         "You call out, demanding to know who watches you. A shadowy figure appears, offering you a deal—a chance to become the next necromancer.",
         { "Accept the offer", "Decline and fight" },
-        { {0, "corrupted"}, {1, "grave_choice"} }
+		{ {0, "corrupted"}, {1, "grave_choice"} },
+		"assets/story node images/shadowy figure.bmp"
     );
 
     storyNodes["dark_altar"] = StoryNode(
         "The altar pulses with dark energy. You see the crown resting atop it, glowing ominously. The air feels charged with power, tempting you.",
         { "Take the crown", "Leave it alone", "Perform a ritual" },
-        { {0, "crown_choice"}, {1, "selection_menu"}, {2, "dark_ritual"} }
+        { {0, "crown_choice"}, {1, "selection_menu"}, {2, "dark_ritual"} },
+		"assets/story node images/dark altar.bmp"
     );
 
     storyNodes["dark_ritual"] = StoryNode(
         "You decide to perform a dark ritual, channeling the energy from the altar. The air crackles as you summon shadows to aid you.",
         { "Command the shadows", "Break the ritual" },
-        { {0, "corrupted"}, {1, "selection_menu"} }
+        { {0, "corrupted"}, {1, "selection_menu"} },
+		"assets/story node images/dark ritual.bmp"
     );
 
     // Crown choice nodes
     storyNodes["crown_choice"] = StoryNode(
         "You place the necromancer’s crown upon your head. A rush of dark power surges through you, reshaping your very essence.",
         { "Embrace the corruption", "Resist the power", "Dismantle the crown" },
-        { {0, "corrupted"}, {1, "grave_choice"}, {2, "selection_menu"} }
+        { {0, "corrupted"}, {1, "grave_choice"}, {2, "selection_menu"} },
+		"assets/story node images/necromancer crown.bmp"
     );
 
     storyNodes["grave_choice"] = StoryNode(
         "You feel your life force slowly draining into the necromancer's grave, transferring your essence into his. Shadows beckon you deeper into the grave.",
         { "Surrender to the drain", "Fight against it", "Seek a way out" },
-        { {0, "sacrificed"}, {1, "freed"}, {2, "selection_menu"} }
+        { {0, "sacrificed"}, {1, "freed"}, {2, "selection_menu"} },
+		"assets/story node images/necromancer grave.bmp"
     );
 
     // End nodes
     storyNodes["corrupted"] = StoryNode(
         "Corruption seeps into your soul, and you become the new necromancer, bound to darkness forever. Your eyes glow with malevolence, and you lose your humanity.",
         { "GAME OVER" },
-        {}
+        {},
+		"assets/story node images/corrupted soul.bmp"
     );
 
     storyNodes["sacrificed"] = StoryNode(
         "Your life force becomes one with the necromancer, granting him new power while you fade into oblivion. His laughter echoes in your mind as your essence is consumed.",
         { "GAME OVER" },
-        {}
+        {},
+		"assets/story node images/sacrificed soul.bmp"
     );
 
     storyNodes["freed"] = StoryNode(
         "You break free from the necromancer's influence, escaping with your life, but forever haunted by the dark choices you made. You emerge into the light, but darkness lingers at the edges of your mind.",
         { "GAME OVER" },
-        {}
+        {},
+		"assets/story node images/freed soul.bmp"
     );
 }
 
